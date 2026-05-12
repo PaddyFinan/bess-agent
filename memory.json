@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-05-12T14:39:03.239817",
+  "timestamp": "2026-05-12T16:08:37.750610",
   "date": "2026-05-12",
-  "time": "14:39",
+  "time": "16:08",
   "spread": {
-    "avg_spread": 122.43,
+    "avg_spread": 122.68,
     "min_spread": 48.85,
     "max_spread": 190.25,
-    "std_spread": 38.32,
+    "std_spread": 38.34,
     "cv_spread": 31.3,
     "days_analysed": 30
   },
@@ -16,18 +16,18 @@
     "trend": "stable"
   },
   "revenue": {
-    "base_case": 2924397.0,
-    "downside": 2478567.0,
-    "severe_downside": 2032738.0
+    "base_case": 2927305.0,
+    "downside": 2481243.0,
+    "severe_downside": 2035181.0
   },
   "dscr": {
-    "base_case": 1.62,
-    "downside": 1.38,
-    "severe_downside": 1.13,
+    "base_case": 2.03,
+    "downside": 1.72,
+    "severe_downside": 1.41,
     "base_flag": "GREEN",
     "downside_flag": "GREEN",
-    "severe_flag": "RED",
+    "severe_flag": "GREEN",
     "deal_assessment": "BANKABLE \u2014 project supports debt financing across full project life",
-    "annual_debt_service": 1801848.0
+    "annual_debt_service": 1441479.0
   }
 }

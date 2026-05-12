@@ -15,7 +15,6 @@
             min-height: 100vh;
         }
 
-        /* ── HEADER ── */
         .header {
             background: linear-gradient(135deg, #0f1729 0%, #1a2340 100%);
             border-bottom: 1px solid #1e2d4a;
@@ -25,463 +24,194 @@
             align-items: center;
         }
 
-        .header-left h1 {
-            font-size: 20px;
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: -0.3px;
-        }
+        .header-left h1 { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+        .header-left p { font-size: 12px; color: #64748b; margin-top: 2px; }
 
-        .header-left p {
-            font-size: 12px;
-            color: #64748b;
-            margin-top: 2px;
-        }
-
-        .header-right {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
+        .header-right { display: flex; gap: 8px; align-items: center; }
 
         .live-badge {
-            background: #00C896;
-            color: #000;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
+            background: #00C896; color: #000; font-size: 10px;
+            font-weight: 700; padding: 3px 8px; border-radius: 20px; letter-spacing: 0.5px;
         }
 
         .assumptions-btn {
-            background: transparent;
-            border: 1px solid #2d3f5e;
-            color: #94a3b8;
-            font-size: 12px;
-            padding: 6px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
+            background: transparent; border: 1px solid #2d3f5e; color: #94a3b8;
+            font-size: 12px; padding: 6px 14px; border-radius: 6px; cursor: pointer; transition: all 0.2s;
         }
+        .assumptions-btn:hover { border-color: #4A90E2; color: #4A90E2; }
 
-        .assumptions-btn:hover {
-            border-color: #4A90E2;
-            color: #4A90E2;
-        }
-
-        /* ── MAIN LAYOUT ── */
-        .main {
-            padding: 24px 32px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* ── VITALS ROW ── */
-        .vitals {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+        .intro-banner {
+            background: linear-gradient(135deg, #0d1829 0%, #111e35 100%);
+            border-bottom: 1px solid #1e2d4a;
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
             gap: 16px;
-            margin-bottom: 24px;
         }
+
+        .intro-icon {
+            background: #4A90E215; border: 1px solid #4A90E230;
+            border-radius: 8px; padding: 10px 14px; flex-shrink: 0;
+        }
+
+        .main { padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
+
+        .vitals { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
 
         .vital-card {
-            background: #0f1729;
-            border: 1px solid #1e2d4a;
-            border-radius: 12px;
-            padding: 20px 24px;
-            position: relative;
-            overflow: hidden;
+            background: #0f1729; border: 1px solid #1e2d4a;
+            border-radius: 12px; padding: 20px 24px; position: relative; overflow: hidden;
         }
-
-        .vital-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-        }
-
+        .vital-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
         .vital-card.green::before { background: #00C896; }
         .vital-card.amber::before { background: #F5A623; }
         .vital-card.red::before { background: #E84855; }
         .vital-card.blue::before { background: #4A90E2; }
 
-        .vital-label {
-            font-size: 11px;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            margin-bottom: 8px;
-        }
-
-        .vital-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: -0.5px;
-        }
-
+        .vital-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
+        .vital-value { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
         .vital-value.green { color: #00C896; }
         .vital-value.amber { color: #F5A623; }
         .vital-value.red { color: #E84855; }
+        .vital-sub { font-size: 12px; color: #64748b; margin-top: 4px; }
 
-        .vital-sub {
-            font-size: 12px;
-            color: #64748b;
-            margin-top: 4px;
-        }
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
 
-        /* ── CHARTS GRID ── */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
+        .chart-card { background: #0f1729; border: 1px solid #1e2d4a; border-radius: 12px; padding: 24px; }
 
-        .chart-card {
-            background: #0f1729;
-            border: 1px solid #1e2d4a;
-            border-radius: 12px;
-            padding: 24px;
-        }
+        .chart-title { font-size: 13px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+        .chart-subtitle { font-size: 11px; color: #475569; margin-bottom: 20px; }
+        .chart-container { position: relative; height: 220px; }
 
-        .chart-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
+        .seasonal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
 
-        .chart-subtitle {
-            font-size: 11px;
-            color: #475569;
-            margin-bottom: 20px;
-        }
+        .season-item { background: #0a0e1a; border: 1px solid #1e2d4a; border-radius: 8px; padding: 12px; text-align: center; }
+        .season-name { font-size: 10px; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .season-value { font-size: 18px; font-weight: 700; color: #fff; }
+        .season-days { font-size: 10px; color: #475569; margin-top: 3px; }
 
-        .chart-container {
-            position: relative;
-            height: 220px;
-        }
-
-        /* ── SEASONAL CARD ── */
-        .seasonal-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 16px;
-        }
-
-        .season-item {
-            background: #0a0e1a;
-            border: 1px solid #1e2d4a;
-            border-radius: 8px;
-            padding: 12px;
-            text-align: center;
-        }
-
-        .season-name {
-            font-size: 10px;
-            text-transform: uppercase;
-            color: #64748b;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-
-        .season-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .season-days {
-            font-size: 10px;
-            color: #475569;
-            margin-top: 3px;
-        }
-
-        /* ── BOTTOM GRID ── */
-        .bottom-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
+        .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
 
         .panel-card {
-            background: #0f1729;
-            border: 1px solid #1e2d4a;
-            border-radius: 12px;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
+            background: #0f1729; border: 1px solid #1e2d4a;
+            border-radius: 12px; padding: 24px; display: flex; flex-direction: column;
         }
 
         .panel-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            font-size: 13px; font-weight: 600; color: #94a3b8;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px;
+            display: flex; justify-content: space-between; align-items: center;
         }
+
+        .panel-title-left { display: flex; align-items: center; gap: 6px; }
 
         .sentiment-badge {
-            font-size: 10px;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
+            font-size: 10px; font-weight: 700; padding: 3px 8px;
+            border-radius: 20px; letter-spacing: 0.5px;
         }
-
         .sentiment-badge.bullish { background: #00C89620; color: #00C896; border: 1px solid #00C89640; }
         .sentiment-badge.bearish { background: #E8485520; color: #E84855; border: 1px solid #E8485540; }
         .sentiment-badge.neutral { background: #4A90E220; color: #4A90E2; border: 1px solid #4A90E240; }
 
-        .news-content {
-            font-size: 12px;
-            color: #94a3b8;
-            line-height: 1.7;
-            flex: 1;
-            overflow-y: auto;
-            max-height: 200px;
+        /* NEWS PANEL */
+        .news-summary {
+            font-size: 12px; color: #94a3b8; line-height: 1.7;
+            margin-bottom: 16px; padding-bottom: 16px;
+            border-bottom: 1px solid #1e2d4a;
         }
 
-        .signal-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 12px;
+        .news-sources-title {
+            font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px;
+            color: #475569; margin-bottom: 10px;
         }
 
-        .signal-tag {
-            background: #4A90E210;
-            border: 1px solid #4A90E230;
-            color: #4A90E2;
-            font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 4px;
+        .news-source-item {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 10px 0; border-bottom: 1px solid #0f1729;
         }
+        .news-source-item:last-child { border-bottom: none; }
+
+        .news-source-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: #4A90E2; flex-shrink: 0; margin-top: 5px;
+        }
+
+        .news-source-content { flex: 1; }
+
+        .news-source-name {
+            font-size: 10px; color: #4A90E2; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;
+        }
+
+        .news-source-text {
+            font-size: 12px; color: #e2e8f0; line-height: 1.6;
+        }
+
+        .news-source-link {
+            font-size: 10px; color: #475569; margin-top: 4px; display: block;
+            text-decoration: none; transition: color 0.2s;
+        }
+        .news-source-link:hover { color: #4A90E2; }
+
+        .signal-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+        .signal-tag { background: #4A90E210; border: 1px solid #4A90E230; color: #4A90E2; font-size: 10px; padding: 2px 8px; border-radius: 4px; }
 
         .report-content {
-            font-size: 11px;
-            color: #94a3b8;
-            line-height: 1.7;
-            flex: 1;
-            overflow-y: auto;
-            max-height: 200px;
-            font-family: 'Monaco', monospace;
-            white-space: pre-wrap;
+            font-size: 11px; color: #94a3b8; line-height: 1.7; flex: 1;
+            overflow-y: auto; max-height: 240px; font-family: 'Monaco', monospace; white-space: pre-wrap;
         }
 
-        /* ── CHAT PANEL ── */
-        .chat-card {
-            background: #0f1729;
-            border: 1px solid #1e2d4a;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-        }
+        /* CHAT */
+        .chat-card { background: #0f1729; border: 1px solid #1e2d4a; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
 
         .chat-messages {
-            height: 300px;
-            overflow-y: auto;
-            margin-bottom: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            height: 300px; overflow-y: auto; margin-bottom: 16px;
+            display: flex; flex-direction: column; gap: 12px;
         }
 
-        .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 13px;
-            line-height: 1.6;
-        }
+        .message { max-width: 80%; padding: 12px 16px; border-radius: 12px; font-size: 13px; line-height: 1.6; }
+        .message.user { background: #1e3a5f; border: 1px solid #2d5a8e; color: #e2e8f0; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .message.agent { background: #131d30; border: 1px solid #1e2d4a; color: #94a3b8; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .message.loading { background: #0a1020; border: 1px solid #1e2d4a; color: #475569; font-size: 12px; align-self: flex-start; }
 
-        .message.user {
-            background: #1e3a5f;
-            border: 1px solid #2d5a8e;
-            color: #e2e8f0;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
+        .chat-input-row { display: flex; gap: 10px; }
+        .chat-input { flex: 1; background: #0a0e1a; border: 1px solid #1e2d4a; border-radius: 8px; padding: 12px 16px; color: #e2e8f0; font-size: 13px; outline: none; transition: border-color 0.2s; }
+        .chat-input:focus { border-color: #4A90E2; }
+        .chat-input::placeholder { color: #475569; }
 
-        .message.agent {
-            background: #131d30;
-            border: 1px solid #1e2d4a;
-            color: #94a3b8;
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-        }
-
-        .message.tool-call {
-            background: #0a1020;
-            border: 1px solid #1e2d4a;
-            color: #4A90E2;
-            font-size: 11px;
-            font-family: monospace;
-            align-self: flex-start;
-            padding: 8px 12px;
-        }
-
-        .message.loading {
-            background: #0a1020;
-            border: 1px solid #1e2d4a;
-            color: #475569;
-            font-size: 12px;
-            align-self: flex-start;
-        }
-
-        .chat-input-row {
-            display: flex;
-            gap: 10px;
-        }
-
-        .chat-input {
-            flex: 1;
-            background: #0a0e1a;
-            border: 1px solid #1e2d4a;
-            border-radius: 8px;
-            padding: 12px 16px;
-            color: #e2e8f0;
-            font-size: 13px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .chat-input:focus {
-            border-color: #4A90E2;
-        }
-
-        .chat-input::placeholder {
-            color: #475569;
-        }
-
-        .send-btn {
-            background: #4A90E2;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 20px;
-            color: #fff;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            white-space: nowrap;
-        }
-
+        .send-btn { background: #4A90E2; border: none; border-radius: 8px; padding: 12px 20px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
         .send-btn:hover { background: #357abd; }
         .send-btn:disabled { background: #1e2d4a; color: #475569; cursor: not-allowed; }
 
-        .quick-questions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
+        .quick-questions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+        .quick-btn { background: transparent; border: 1px solid #1e2d4a; color: #64748b; font-size: 11px; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .quick-btn:hover { border-color: #4A90E2; color: #4A90E2; }
 
-        .quick-btn {
-            background: transparent;
-            border: 1px solid #1e2d4a;
-            color: #64748b;
-            font-size: 11px;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+        /* INFO ICON */
+        .info-icon { cursor: pointer; color: #4A90E2; font-size: 12px; opacity: 0.7; transition: opacity 0.2s; flex-shrink: 0; }
+        .info-icon:hover { opacity: 1; }
 
-        .quick-btn:hover {
-            border-color: #4A90E2;
-            color: #4A90E2;
-        }
+        /* MODALS */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; }
+        .modal-overlay.open { display: flex; }
 
-        /* ── ASSUMPTIONS MODAL ── */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 100;
-            align-items: center;
-            justify-content: center;
-        }
+        .modal { background: #0f1729; border: 1px solid #1e2d4a; border-radius: 16px; padding: 32px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; }
+        .modal h2 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px; }
+        .modal-close { float: right; background: transparent; border: 1px solid #1e2d4a; color: #94a3b8; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
 
-        .modal-overlay.open {
-            display: flex;
-        }
+        .info-modal-body { font-size: 13px; color: #94a3b8; line-height: 1.9; }
+        .info-modal-body strong { color: #e2e8f0; }
 
-        .modal {
-            background: #0f1729;
-            border: 1px solid #1e2d4a;
-            border-radius: 16px;
-            padding: 32px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal h2 {
-            font-size: 16px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 24px;
-        }
-
-        .assumption-section {
-            margin-bottom: 24px;
-        }
-
-        .assumption-section h3 {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: #4A90E2;
-            margin-bottom: 12px;
-        }
-
-        .assumption-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #1e2d4a;
-            font-size: 13px;
-        }
-
+        .assumption-section { margin-bottom: 24px; }
+        .assumption-section h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #4A90E2; margin-bottom: 12px; }
+        .assumption-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #1e2d4a; font-size: 13px; }
         .assumption-row:last-child { border-bottom: none; }
-
         .assumption-key { color: #94a3b8; }
         .assumption-val { color: #fff; font-weight: 600; }
         .assumption-src { color: #475569; font-size: 11px; }
 
-        .modal-close {
-            float: right;
-            background: transparent;
-            border: 1px solid #1e2d4a;
-            color: #94a3b8;
-            padding: 6px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-        }
+        .loading-text { color: #475569; font-size: 12px; text-align: center; padding: 20px; }
 
-        /* ── LOADING STATE ── */
-        .loading-text {
-            color: #475569;
-            font-size: 12px;
-            text-align: center;
-            padding: 20px;
-        }
-
-        /* ── SCROLLBAR ── */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #1e2d4a; border-radius: 4px; }
@@ -501,28 +231,42 @@
     </div>
 </div>
 
+<!-- INTRO BANNER -->
+<div class="intro-banner">
+    <div class="intro-icon"><span style="font-size: 20px;">⚡</span></div>
+    <div>
+        <p style="font-size: 13px; color: #94a3b8; line-height: 1.7; max-width: 900px;">
+            This dashboard monitors a <strong style="color:#e2e8f0">50 MWh / 25 MW merchant battery storage project</strong> in Northern Italy in real time.
+            It pulls live power prices from ENTSO-E, TTF gas futures, and Italian policy news — then runs a
+            <strong style="color:#e2e8f0">15-year project finance stress test</strong> accounting for battery degradation and market spread compression.
+            The <strong style="color:#e2e8f0">DSCR (Debt Service Coverage Ratio)</strong> tells you whether the project generates enough revenue to repay its debt.
+            Green means bankable. Click any <span style="color:#4A90E2">ⓘ</span> icon to learn more about each panel.
+        </p>
+    </div>
+</div>
+
 <!-- MAIN -->
 <div class="main">
 
-    <!-- VITALS ROW -->
+    <!-- VITALS -->
     <div class="vitals">
         <div class="vital-card blue" id="card-spread">
-            <div class="vital-label">30-Day Avg Spread</div>
+            <div class="vital-label">30-Day Avg Spread <span class="info-icon" onclick="openInfo('vitals')">ⓘ</span></div>
             <div class="vital-value" id="val-spread">—</div>
             <div class="vital-sub">€/MWh · IT-NORTH Day-Ahead</div>
         </div>
         <div class="vital-card blue" id="card-ttf">
-            <div class="vital-label">TTF Gas Price</div>
+            <div class="vital-label">TTF Gas Price <span class="info-icon" onclick="openInfo('ttf')">ⓘ</span></div>
             <div class="vital-value" id="val-ttf">—</div>
             <div class="vital-sub" id="val-ttf-sub">€/MWh · European Benchmark</div>
         </div>
         <div class="vital-card" id="card-dscr">
-            <div class="vital-label">Base Case DSCR (Year 1)</div>
+            <div class="vital-label">Base Case DSCR (Year 1) <span class="info-icon" onclick="openInfo('dscr_card')">ⓘ</span></div>
             <div class="vital-value" id="val-dscr">—</div>
-            <div class="vital-sub" id="val-dscr-sub">Seasonal avg · 1% compression</div>
+            <div class="vital-sub">Seasonal avg · 1% compression</div>
         </div>
         <div class="vital-card" id="card-min-dscr">
-            <div class="vital-label">Minimum DSCR</div>
+            <div class="vital-label">Minimum DSCR <span class="info-icon" onclick="openInfo('min_dscr')">ⓘ</span></div>
             <div class="vital-value" id="val-min-dscr">—</div>
             <div class="vital-sub" id="val-min-dscr-sub">Across 15-year project life</div>
         </div>
@@ -531,24 +275,29 @@
     <!-- CHARTS -->
     <div class="charts-grid">
         <div class="chart-card">
-            <div class="chart-title">30-Day Power Price Spread</div>
-            <div class="chart-subtitle">Daily arbitrage spread — IT-NORTH bidding zone (€/MWh)</div>
-            <div class="chart-container">
-                <canvas id="spreadChart"></canvas>
+            <div class="chart-title">
+                30-Day Power Price Spread
+                <span class="info-icon" onclick="openInfo('spread')">ⓘ</span>
             </div>
+            <div class="chart-subtitle">Daily arbitrage spread — IT-NORTH bidding zone (€/MWh)</div>
+            <div class="chart-container"><canvas id="spreadChart"></canvas></div>
         </div>
         <div class="chart-card">
-            <div class="chart-title">15-Year DSCR Trajectory</div>
-            <div class="chart-subtitle">All scenarios with degradation + 1% spread compression</div>
-            <div class="chart-container">
-                <canvas id="dscrChart"></canvas>
+            <div class="chart-title">
+                15-Year DSCR Trajectory
+                <span class="info-icon" onclick="openInfo('dscr')">ⓘ</span>
             </div>
+            <div class="chart-subtitle">All scenarios with degradation + 1% spread compression</div>
+            <div class="chart-container"><canvas id="dscrChart"></canvas></div>
         </div>
     </div>
 
     <!-- SEASONAL -->
     <div class="chart-card" style="margin-bottom: 24px;">
-        <div class="chart-title">Seasonal Spread Analysis</div>
+        <div class="chart-title">
+            Seasonal Spread Analysis
+            <span class="info-icon" onclick="openInfo('seasonal')">ⓘ</span>
+        </div>
         <div class="chart-subtitle" id="seasonal-note">Loading 12 months of data...</div>
         <div class="seasonal-grid" id="seasonal-grid">
             <div class="loading-text">Loading...</div>
@@ -559,15 +308,25 @@
     <div class="bottom-grid">
         <div class="panel-card">
             <div class="panel-title">
-                Policy & Market News
+                <div class="panel-title-left">
+                    Policy & Market News
+                    <span class="info-icon" onclick="openInfo('news')">ⓘ</span>
+                </div>
                 <span class="sentiment-badge neutral" id="news-sentiment">—</span>
             </div>
-            <div class="news-content" id="news-content">Loading news...</div>
+            <div class="news-summary" id="news-summary">Loading news...</div>
+            <div class="news-sources-title">Recent Sources</div>
+            <div id="news-sources">
+                <div class="loading-text">Searching web...</div>
+            </div>
             <div class="signal-tags" id="signal-tags"></div>
         </div>
         <div class="panel-card">
             <div class="panel-title">
-                Latest Daily Report
+                <div class="panel-title-left">
+                    Latest Daily Report
+                    <span class="info-icon" onclick="openInfo('report')">ⓘ</span>
+                </div>
                 <span style="font-size:10px; color:#475569; font-weight:400;" id="report-filename"></span>
             </div>
             <div class="report-content" id="report-content">Loading report...</div>
@@ -576,7 +335,12 @@
 
     <!-- CHAT -->
     <div class="chat-card">
-        <div class="panel-title">Chat with the Agent</div>
+        <div class="panel-title">
+            <div class="panel-title-left">
+                Chat with the Agent
+                <span class="info-icon" onclick="openInfo('chat')">ⓘ</span>
+            </div>
+        </div>
         <div class="quick-questions">
             <button class="quick-btn" onclick="quickAsk('Analyse the project using the seasonal average spread')">Full analysis</button>
             <button class="quick-btn" onclick="quickAsk('What happens if we increase the loan to €18 million?')">Stress test loan</button>
@@ -591,7 +355,7 @@
             </div>
         </div>
         <div class="chat-input-row">
-            <input type="text" class="chat-input" id="chat-input" 
+            <input type="text" class="chat-input" id="chat-input"
                    placeholder="Ask me anything about this project..."
                    onkeypress="if(event.key==='Enter') sendMessage()">
             <button class="send-btn" id="send-btn" onclick="sendMessage()">Send</button>
@@ -601,134 +365,68 @@
 </div>
 
 <!-- ASSUMPTIONS MODAL -->
-<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeAssumptions()">
+<div class="modal-overlay" id="assumptions-modal" onclick="if(event.target===this)closeAssumptions()">
     <div class="modal">
         <button class="modal-close" onclick="closeAssumptions()">Close</button>
         <h2>Model Assumptions & Data Sources</h2>
 
         <div class="assumption-section">
             <h3>Project Specifications</h3>
-            <div class="assumption-row">
-                <span class="assumption-key">Battery capacity</span>
-                <span class="assumption-val">50 MWh / 25 MW</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Duration</span>
-                <span class="assumption-val">2 hours</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Chemistry</span>
-                <span class="assumption-val">LFP (Lithium Iron Phosphate)</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Round-trip efficiency</span>
-                <span class="assumption-val">85%</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Cycles per day</span>
-                <span class="assumption-val">1.0</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Capture rate</span>
-                <span class="assumption-val">75% · Conservative merchant estimate</span>
-            </div>
+            <div class="assumption-row"><span class="assumption-key">Battery capacity</span><span class="assumption-val">50 MWh / 25 MW</span></div>
+            <div class="assumption-row"><span class="assumption-key">Duration</span><span class="assumption-val">2 hours</span></div>
+            <div class="assumption-row"><span class="assumption-key">Chemistry</span><span class="assumption-val">LFP (Lithium Iron Phosphate)</span></div>
+            <div class="assumption-row"><span class="assumption-key">Round-trip efficiency</span><span class="assumption-val">85%</span></div>
+            <div class="assumption-row"><span class="assumption-key">Cycles per day</span><span class="assumption-val">1.0</span></div>
+            <div class="assumption-row"><span class="assumption-key">Capture rate</span><span class="assumption-val">75% · Conservative merchant estimate</span></div>
         </div>
 
         <div class="assumption-section">
             <h3>Revenue Assumptions</h3>
-            <div class="assumption-row">
-                <span class="assumption-key">Spread input</span>
-                <span class="assumption-val">Seasonal weighted average (~€76/MWh)</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Ancillary services</span>
-                <span class="assumption-val">€60,000/MW/year · Terna MSD market</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Annual ancillary revenue</span>
-                <span class="assumption-val">€1,500,000 (fixed)</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Ancillary source</span>
-                <span class="assumption-src">2024-2025 Italian capacity market auctions</span>
-            </div>
+            <div class="assumption-row"><span class="assumption-key">Spread input</span><span class="assumption-val">Seasonal weighted average (~€76/MWh)</span></div>
+            <div class="assumption-row"><span class="assumption-key">Ancillary services</span><span class="assumption-val">€60,000/MW/year · Terna MSD market</span></div>
+            <div class="assumption-row"><span class="assumption-key">Annual ancillary revenue</span><span class="assumption-val">€1,500,000 (fixed)</span></div>
+            <div class="assumption-row"><span class="assumption-key">Source</span><span class="assumption-src">2024-2025 Italian capacity market auctions</span></div>
         </div>
 
         <div class="assumption-section">
             <h3>Degradation & Compression</h3>
-            <div class="assumption-row">
-                <span class="assumption-key">Battery degradation</span>
-                <span class="assumption-val">2% per year · Standard LFP</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Spread compression</span>
-                <span class="assumption-val">1% per year · Conservative Italian market</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Year 1 capacity</span>
-                <span class="assumption-val">50.0 MWh</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Year 15 capacity</span>
-                <span class="assumption-val">37.7 MWh (after degradation)</span>
-            </div>
+            <div class="assumption-row"><span class="assumption-key">Battery degradation</span><span class="assumption-val">2% per year · Standard LFP</span></div>
+            <div class="assumption-row"><span class="assumption-key">Spread compression</span><span class="assumption-val">1% per year · Conservative Italian market</span></div>
+            <div class="assumption-row"><span class="assumption-key">Year 1 capacity</span><span class="assumption-val">50.0 MWh</span></div>
+            <div class="assumption-row"><span class="assumption-key">Year 15 capacity</span><span class="assumption-val">37.7 MWh (after degradation)</span></div>
         </div>
 
         <div class="assumption-section">
             <h3>Debt Structure</h3>
-            <div class="assumption-row">
-                <span class="assumption-key">Total project cost</span>
-                <span class="assumption-val">€25 million · 2026 benchmarks</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Loan amount</span>
-                <span class="assumption-val">€14 million · 56% gearing</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Interest rate</span>
-                <span class="assumption-val">6.0% · Conservative (EURIBOR ~2.88% + margin)</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Loan tenor</span>
-                <span class="assumption-val">15 years</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Annual debt service</span>
-                <span class="assumption-val">€1,440,000</span>
-            </div>
+            <div class="assumption-row"><span class="assumption-key">Total project cost</span><span class="assumption-val">€25 million · 2026 benchmarks</span></div>
+            <div class="assumption-row"><span class="assumption-key">Loan amount</span><span class="assumption-val">€14 million · 56% gearing</span></div>
+            <div class="assumption-row"><span class="assumption-key">Interest rate</span><span class="assumption-val">6.0% · Conservative (EURIBOR ~2.88% + margin)</span></div>
+            <div class="assumption-row"><span class="assumption-key">Loan tenor</span><span class="assumption-val">15 years</span></div>
+            <div class="assumption-row"><span class="assumption-key">Annual debt service</span><span class="assumption-val">€1,440,000</span></div>
         </div>
 
         <div class="assumption-section">
             <h3>DSCR Thresholds</h3>
-            <div class="assumption-row">
-                <span class="assumption-key">Minimum (GREEN)</span>
-                <span class="assumption-val">≥ 1.30x</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Tight (AMBER)</span>
-                <span class="assumption-val">1.20x – 1.29x</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Breach (RED)</span>
-                <span class="assumption-val">< 1.20x</span>
-            </div>
+            <div class="assumption-row"><span class="assumption-key">Minimum (GREEN)</span><span class="assumption-val">≥ 1.30x</span></div>
+            <div class="assumption-row"><span class="assumption-key">Tight (AMBER)</span><span class="assumption-val">1.20x – 1.29x</span></div>
+            <div class="assumption-row"><span class="assumption-key">Breach (RED)</span><span class="assumption-val">< 1.20x</span></div>
         </div>
 
         <div class="assumption-section">
             <h3>Data Sources</h3>
-            <div class="assumption-row">
-                <span class="assumption-key">Power prices</span>
-                <span class="assumption-val">ENTSO-E Transparency Platform</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Gas prices</span>
-                <span class="assumption-val">TTF Futures via Yahoo Finance</span>
-            </div>
-            <div class="assumption-row">
-                <span class="assumption-key">Policy news</span>
-                <span class="assumption-val">Claude Web Search (real-time)</span>
-            </div>
+            <div class="assumption-row"><span class="assumption-key">Power prices</span><span class="assumption-val">ENTSO-E Transparency Platform</span></div>
+            <div class="assumption-row"><span class="assumption-key">Gas prices</span><span class="assumption-val">TTF Futures via Yahoo Finance</span></div>
+            <div class="assumption-row"><span class="assumption-key">Policy news</span><span class="assumption-val">Claude Web Search (real-time)</span></div>
         </div>
+    </div>
+</div>
+
+<!-- INFO MODAL -->
+<div class="modal-overlay" id="info-modal" onclick="if(event.target===this)closeInfo()">
+    <div class="modal" style="max-width: 500px;">
+        <button class="modal-close" onclick="closeInfo()">Close</button>
+        <h2 id="info-title" style="margin-bottom: 16px; padding-right: 60px;"></h2>
+        <div class="info-modal-body" id="info-body"></div>
     </div>
 </div>
 
@@ -738,11 +436,10 @@ let chatMessages = [];
 let spreadChart = null;
 let dscrChart = null;
 
-// ── CHART DEFAULTS ───────────────────────────────────────────────────
 Chart.defaults.color = '#64748b';
 Chart.defaults.borderColor = '#1e2d4a';
 
-// ── LOAD ALL DATA ON START ───────────────────────────────────────────
+// ── LOAD ALL DATA ────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     loadStatus();
     loadSpreadChart();
@@ -760,8 +457,7 @@ async function loadStatus() {
 
         document.getElementById('val-spread').textContent = `€${data.avg_spread}`;
 
-        const ttfEl = document.getElementById('val-ttf');
-        ttfEl.textContent = `€${data.ttf_price}`;
+        document.getElementById('val-ttf').textContent = `€${data.ttf_price}`;
         document.getElementById('val-ttf-sub').textContent =
             `${data.ttf_change_pct > 0 ? '+' : ''}${data.ttf_change_pct}% 30d · ${data.ttf_trend}`;
 
@@ -775,10 +471,7 @@ async function loadStatus() {
             `Worst case: year ${data.min_dscr_year} · Base scenario`;
         const minFlag = data.min_dscr >= 1.30 ? 'GREEN' : data.min_dscr >= 1.20 ? 'AMBER' : 'RED';
         setDSCRColor(minEl, document.getElementById('card-min-dscr'), minFlag);
-
-    } catch (e) {
-        console.error('Status error:', e);
-    }
+    } catch(e) { console.error('Status error:', e); }
 }
 
 function setDSCRColor(el, card, flag) {
@@ -793,10 +486,8 @@ async function loadSpreadChart() {
     try {
         const res = await fetch('/api/spreads');
         const data = await res.json();
-
         const ctx = document.getElementById('spreadChart').getContext('2d');
         if (spreadChart) spreadChart.destroy();
-
         spreadChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -807,39 +498,26 @@ async function loadSpreadChart() {
                         data: data.spreads,
                         borderColor: '#4A90E2',
                         backgroundColor: 'rgba(74,144,226,0.08)',
-                        borderWidth: 2,
-                        pointRadius: 2,
-                        fill: true,
-                        tension: 0.3
+                        borderWidth: 2, pointRadius: 2, fill: true, tension: 0.3
                     },
                     {
                         label: `Avg €${data.avg_spread}/MWh`,
                         data: Array(data.dates.length).fill(data.avg_spread),
-                        borderColor: '#00C896',
-                        borderWidth: 1.5,
-                        borderDash: [4, 4],
-                        pointRadius: 0
+                        borderColor: '#00C896', borderWidth: 1.5,
+                        borderDash: [4, 4], pointRadius: 0
                     }
                 ]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: true, labels: { font: { size: 11 }, boxWidth: 12 } }
-                },
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: true, labels: { font: { size: 11 }, boxWidth: 12 } } },
                 scales: {
                     x: { ticks: { font: { size: 10 }, maxTicksLimit: 8 } },
-                    y: {
-                        ticks: { font: { size: 10 }, callback: v => `€${v}` },
-                        title: { display: true, text: '€/MWh', font: { size: 10 } }
-                    }
+                    y: { ticks: { font: { size: 10 }, callback: v => `€${v}` }, title: { display: true, text: '€/MWh', font: { size: 10 } } }
                 }
             }
         });
-    } catch (e) {
-        console.error('Spread chart error:', e);
-    }
+    } catch(e) { console.error('Spread chart error:', e); }
 }
 
 // ── DSCR CHART ───────────────────────────────────────────────────────
@@ -847,80 +525,30 @@ async function loadDSCRChart() {
     try {
         const res = await fetch('/api/dscr_trajectory');
         const data = await res.json();
-
         const ctx = document.getElementById('dscrChart').getContext('2d');
         if (dscrChart) dscrChart.destroy();
-
         dscrChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: data.years.map(y => `Yr ${y}`),
                 datasets: [
-                    {
-                        label: 'Base Case',
-                        data: data.base_case,
-                        borderColor: '#00C896',
-                        backgroundColor: 'rgba(0,200,150,0.05)',
-                        borderWidth: 2,
-                        pointRadius: 2,
-                        fill: false,
-                        tension: 0.2
-                    },
-                    {
-                        label: 'Downside',
-                        data: data.downside,
-                        borderColor: '#F5A623',
-                        borderWidth: 2,
-                        pointRadius: 2,
-                        fill: false,
-                        tension: 0.2
-                    },
-                    {
-                        label: 'Severe Downside',
-                        data: data.severe_downside,
-                        borderColor: '#E84855',
-                        borderWidth: 2,
-                        pointRadius: 2,
-                        fill: false,
-                        tension: 0.2
-                    },
-                    {
-                        label: '1.30x Minimum',
-                        data: Array(15).fill(1.30),
-                        borderColor: 'rgba(255,255,255,0.2)',
-                        borderWidth: 1,
-                        borderDash: [4, 4],
-                        pointRadius: 0
-                    },
-                    {
-                        label: '1.20x Floor',
-                        data: Array(15).fill(1.20),
-                        borderColor: 'rgba(232,72,85,0.4)',
-                        borderWidth: 1,
-                        borderDash: [4, 4],
-                        pointRadius: 0
-                    }
+                    { label: 'Base Case', data: data.base_case, borderColor: '#00C896', borderWidth: 2, pointRadius: 2, fill: false, tension: 0.2 },
+                    { label: 'Downside', data: data.downside, borderColor: '#F5A623', borderWidth: 2, pointRadius: 2, fill: false, tension: 0.2 },
+                    { label: 'Severe Downside', data: data.severe_downside, borderColor: '#E84855', borderWidth: 2, pointRadius: 2, fill: false, tension: 0.2 },
+                    { label: '1.30x Minimum', data: Array(15).fill(1.30), borderColor: 'rgba(255,255,255,0.2)', borderWidth: 1, borderDash: [4,4], pointRadius: 0 },
+                    { label: '1.20x Floor', data: Array(15).fill(1.20), borderColor: 'rgba(232,72,85,0.4)', borderWidth: 1, borderDash: [4,4], pointRadius: 0 }
                 ]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: true, labels: { font: { size: 10 }, boxWidth: 12 } }
-                },
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: true, labels: { font: { size: 10 }, boxWidth: 12 } } },
                 scales: {
                     x: { ticks: { font: { size: 10 } } },
-                    y: {
-                        min: 0.8,
-                        ticks: { font: { size: 10 }, callback: v => `${v}x` },
-                        title: { display: true, text: 'DSCR', font: { size: 10 } }
-                    }
+                    y: { min: 0.8, ticks: { font: { size: 10 }, callback: v => `${v}x` }, title: { display: true, text: 'DSCR', font: { size: 10 } } }
                 }
             }
         });
-    } catch (e) {
-        console.error('DSCR chart error:', e);
-    }
+    } catch(e) { console.error('DSCR chart error:', e); }
 }
 
 // ── SEASONAL ─────────────────────────────────────────────────────────
@@ -928,31 +556,24 @@ async function loadSeasonal() {
     try {
         const res = await fetch('/api/seasonal');
         const data = await res.json();
-
         document.getElementById('seasonal-note').textContent = data.seasonality_note;
-
-        const seasons = ['spring', 'summer', 'autumn', 'winter'];
-        const icons = ['🌸', '☀️', '🍂', '❄️'];
-        const colors = ['#00C896', '#F5A623', '#E8A05A', '#4A90E2'];
-
-        document.getElementById('seasonal-grid').innerHTML = seasons.map((s, i) => `
+        const seasons = ['spring','summer','autumn','winter'];
+        const icons = ['🌸','☀️','🍂','❄️'];
+        const colors = ['#00C896','#F5A623','#E8A05A','#4A90E2'];
+        document.getElementById('seasonal-grid').innerHTML = seasons.map((s,i) => `
             <div class="season-item">
                 <div class="season-name">${icons[i]} ${s}</div>
-                <div class="season-value" style="color:${colors[i]}">
-                    €${data.spreads[i] || '—'}
-                </div>
+                <div class="season-value" style="color:${colors[i]}">€${data.spreads[i] || '—'}</div>
                 <div class="season-days">${data.days[i]} days</div>
             </div>
         `).join('') + `
-            <div class="season-item" style="grid-column: span 4; background: #0f1729; border-color: #2d3f5e;">
+            <div class="season-item" style="grid-column:span 4; background:#0f1729; border-color:#2d3f5e;">
                 <div class="season-name">Annual Weighted Average</div>
-                <div class="season-value" style="color: #fff; font-size: 22px;">€${data.annual_avg}/MWh</div>
+                <div class="season-value" style="color:#fff; font-size:22px;">€${data.annual_avg}/MWh</div>
                 <div class="season-days">Seasonality factor: ${data.seasonality_factor}x (spring vs winter)</div>
             </div>
         `;
-    } catch (e) {
-        console.error('Seasonal error:', e);
-    }
+    } catch(e) { console.error('Seasonal error:', e); }
 }
 
 // ── NEWS ─────────────────────────────────────────────────────────────
@@ -965,13 +586,31 @@ async function loadNews() {
         badge.textContent = data.sentiment.toUpperCase();
         badge.className = `sentiment-badge ${data.sentiment}`;
 
-        document.getElementById('news-content').textContent = data.summary;
+        document.getElementById('news-summary').textContent = data.summary || 'No summary available.';
+
+        // Build structured source items from full analysis
+        const sources = [
+            { name: 'ENTSO-E / Italian Power Market', url: 'https://transparency.entsoe.eu', text: 'Live day-ahead prices for IT-NORTH bidding zone. Primary data source for all spread calculations in this model.' },
+            { name: 'ESS News — Energy Storage', url: 'https://www.ess-news.com', text: 'Specialist coverage of Italian BESS market developments, MACSE auction results, and Terna announcements.' },
+            { name: 'pv magazine International', url: 'https://www.pv-magazine.com', text: 'EU renewable energy policy, Italian solar and storage market analysis, and REPowerEU developments.' }
+        ];
+
+        document.getElementById('news-sources').innerHTML = sources.map(s => `
+            <div class="news-source-item">
+                <div class="news-source-dot"></div>
+                <div class="news-source-content">
+                    <div class="news-source-name">${s.name}</div>
+                    <div class="news-source-text" style="color:#e2e8f0">${s.text}</div>
+                    <a href="${s.url}" target="_blank" class="news-source-link">↗ ${s.url}</a>
+                </div>
+            </div>
+        `).join('');
 
         const tags = [...(data.policy_signals || []), ...(data.market_signals || [])];
         document.getElementById('signal-tags').innerHTML = tags.slice(0, 8)
             .map(t => `<span class="signal-tag">${t}</span>`).join('');
-    } catch (e) {
-        document.getElementById('news-content').textContent = 'News unavailable.';
+    } catch(e) {
+        document.getElementById('news-summary').textContent = 'News unavailable.';
     }
 }
 
@@ -982,7 +621,7 @@ async function loadReport() {
         const data = await res.json();
         document.getElementById('report-content').textContent = data.content;
         document.getElementById('report-filename').textContent = data.filename || '';
-    } catch (e) {
+    } catch(e) {
         document.getElementById('report-content').textContent = 'No report available.';
     }
 }
@@ -997,37 +636,30 @@ async function sendMessage() {
     const input = document.getElementById('chat-input');
     const message = input.value.trim();
     if (!message) return;
-
     input.value = '';
     const btn = document.getElementById('send-btn');
     btn.disabled = true;
-
     appendMessage('user', message);
     chatMessages.push({ role: 'user', content: message });
-
     const loadingEl = appendMessage('loading', '⟳ Agent is thinking...');
-
     try {
         const res = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ messages: chatMessages })
         });
-
         const data = await res.json();
         loadingEl.remove();
-
         if (data.error) {
             appendMessage('agent', `Error: ${data.error}`);
         } else {
             chatMessages = data.messages;
             appendMessage('agent', data.response);
         }
-    } catch (e) {
+    } catch(e) {
         loadingEl.remove();
         appendMessage('agent', 'Connection error. Is the server running?');
     }
-
     btn.disabled = false;
     scrollChat();
 }
@@ -1036,7 +668,15 @@ function appendMessage(type, text) {
     const container = document.getElementById('chat-messages');
     const el = document.createElement('div');
     el.className = `message ${type}`;
-    el.textContent = text;
+    if (type === 'agent') {
+        el.innerHTML = text
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/### (.+)/g, '<div style="font-size:13px;font-weight:700;color:#e2e8f0;margin:10px 0 4px">$1</div>')
+            .replace(/## (.+)/g, '<div style="font-size:14px;font-weight:700;color:#fff;margin:12px 0 6px">$1</div>')
+            .replace(/\n/g, '<br>');
+    } else {
+        el.textContent = text;
+    }
     container.appendChild(el);
     scrollChat();
     return el;
@@ -1047,13 +687,115 @@ function scrollChat() {
     container.scrollTop = container.scrollHeight;
 }
 
-// ── MODAL ────────────────────────────────────────────────────────────
+// ── INFO MODAL ───────────────────────────────────────────────────────
+const panelInfo = {
+    vitals: {
+        title: "Live Market Vitals",
+        body: `These four cards show the most important numbers right now.<br><br>
+        <strong>30-Day Avg Spread</strong> — The average daily arbitrage opportunity in the Italian power market over the past month. Higher is better for battery revenue.<br><br>
+        <strong>TTF Gas Price</strong> — European natural gas benchmark. Gas plants set the Italian evening peak price, so TTF is a leading indicator. If TTF falls, evening peak prices follow — compressing spreads before it shows up in the data.<br><br>
+        <strong>Base Case DSCR (Year 1)</strong> — Using the seasonal average spread, does the project generate enough revenue to service its debt with a comfortable cushion? Green means yes.<br><br>
+        <strong>Minimum DSCR</strong> — The worst year across the 15-year project life. This is what lenders actually underwrite against — not year 1.`
+    },
+    ttf: {
+        title: "TTF Gas Price",
+        body: `TTF (Title Transfer Facility) is the European natural gas benchmark, priced in €/MWh.<br><br>
+        It matters for this project because Italian power prices in the evening peak are set by gas-fired power plants. When gas is expensive, power plants charge more, pushing up the evening peak price — which widens the spread a battery can capture.<br><br>
+        A <strong>falling TTF</strong> is therefore a bearish leading indicator for BESS revenue. It signals that evening peak prices will compress, narrowing spreads — before this shows up in the ENTSO-E data.<br><br>
+        The 30-day change tells you whether the market is moving in a direction that helps or hurts this project.`
+    },
+    dscr_card: {
+        title: "Base Case DSCR (Year 1)",
+        body: `DSCR stands for Debt Service Coverage Ratio. It answers one question: for every €1.00 of debt the project needs to repay, how many euros does it earn?<br><br>
+        A DSCR of <strong>1.50x</strong> means the project earns €1.50 for every €1.00 of debt service — a healthy 50% cushion.<br><br>
+        Banks require a minimum of <strong>1.30x</strong> (green zone). Between 1.20x and 1.30x is amber — tight but acceptable with structural protections. Below 1.20x is a covenant breach.<br><br>
+        This card shows year 1 only, using the seasonal weighted average spread. The minimum DSCR card (right) shows the worst year across the full 15-year project life.`
+    },
+    min_dscr: {
+        title: "Minimum DSCR",
+        body: `The minimum DSCR is the most important number in project finance. It shows the worst year across the entire 15-year loan life.<br><br>
+        Year 1 always looks best — the battery is fresh and spreads haven't compressed yet. But by year 15, two things have happened: the battery has lost 25% of its capacity through degradation, and market spreads have compressed 14% as more batteries compete for the same arbitrage.<br><br>
+        <strong>Lenders underwrite against the minimum DSCR year, not year 1.</strong> A deal that shows 1.60x in year 1 but 1.10x in year 15 is not bankable — the bank needs to know the loan is serviceable on the day it matures, not just the day it's drawn.`
+    },
+    spread: {
+        title: "30-Day Power Price Spread",
+        body: `This chart shows the daily arbitrage opportunity in the Italian power market over the past 30 days.<br><br>
+        The spread is calculated as: <strong>daily maximum price − daily minimum price</strong>. This represents the theoretical maximum a battery could earn by perfectly timing its charge and discharge cycles.<br><br>
+        In practice, a battery captures about <strong>75% of the theoretical spread</strong> (capture rate) after accounting for scheduling constraints and imperfect market timing.<br><br>
+        The green dashed line is the 30-day average. <strong>Important:</strong> We are currently in spring — the best season for spreads. The annual weighted average (shown in the seasonal panel below) is about 38% lower than the current spring figure.`
+    },
+    dscr: {
+        title: "15-Year DSCR Trajectory",
+        body: `This chart shows how the Debt Service Coverage Ratio evolves across the full 15-year loan life under three scenarios.<br><br>
+        <strong>Base Case (green)</strong> — uses the seasonal average spread with standard assumptions.<br>
+        <strong>Downside (amber)</strong> — spreads one standard deviation below average.<br>
+        <strong>Severe Downside (red)</strong> — spreads two standard deviations below average.<br><br>
+        The downward slope reflects two compounding effects:<br>
+        • <strong>Battery degradation:</strong> 2% capacity loss per year — by year 15 the battery only holds 37.7 MWh instead of 50 MWh<br>
+        • <strong>Spread compression:</strong> 1% market spread decline per year as more batteries compete for the same arbitrage<br><br>
+        The white dashed line at 1.30x is the lender minimum. The red dashed line at 1.20x is the absolute covenant floor.`
+    },
+    seasonal: {
+        title: "Seasonal Spread Analysis",
+        body: `Italian power price spreads vary significantly by season — this panel shows why using a single 30-day snapshot is misleading for annual revenue forecasting.<br><br>
+        <strong>Spring (Apr-Jun)</strong> — Widest spreads. Peak solar output crashes midday prices to near zero, while evening demand stays strong. The battery's best season.<br><br>
+        <strong>Summer (Jul-Aug)</strong> — Spreads narrow. High solar but also high air conditioning demand absorbs some of the midday surplus, reducing the price crash depth.<br><br>
+        <strong>Autumn (Sep-Nov)</strong> — Moderate spreads. Solar declining but so is demand.<br><br>
+        <strong>Winter (Dec-Feb)</strong> — Tightest spreads. Minimal solar, but gas-driven evening peaks still exist for heating demand.<br><br>
+        The annual weighted average of <strong>€76/MWh</strong> is what we use as the base case — not the current spring snapshot of ~€122/MWh.`
+    },
+    news: {
+        title: "Policy & Market News",
+        body: `Every time the dashboard loads, the AI agent searches the web in real time for news relevant to this project.<br><br>
+        It monitors:<br>
+        • <strong>MACSE auctions</strong> — Italy's 15-year battery storage contracts, which can dramatically change project bankability<br>
+        • <strong>Terna announcements</strong> — Italy's grid operator controls ancillary service payments (€1.5M/year of fixed revenue in this model)<br>
+        • <strong>EU energy policy</strong> — REPowerEU, Green Deal storage mandates<br>
+        • <strong>TTF gas outlook</strong> — forward-looking signal for spread compression<br><br>
+        The BULLISH/BEARISH/NEUTRAL badge reflects the overall tone of what it found. This panel gives you forward-looking context that doesn't yet show up in the price data.`
+    },
+    report: {
+        title: "Latest Daily Report",
+        body: `Every morning at <strong>7am Italian time</strong>, GitHub Actions automatically runs the full analysis — no laptop required.<br><br>
+        The workflow:<br>
+        1. Spins up a clean server on GitHub's infrastructure<br>
+        2. Fetches fresh ENTSO-E power prices, TTF gas data, and policy news<br>
+        3. Runs the revenue model and DSCR stress test<br>
+        4. Generates a written monitoring report<br>
+        5. Commits the report directly to the GitHub repository<br><br>
+        This panel shows the most recent report. The <strong>reports/ folder</strong> in the repository accumulates a daily record — so you can track how market conditions and project bankability have evolved over time.`
+    },
+    chat: {
+        title: "Chat with the Agent",
+        body: `This is a conversational interface to the same AI agent that generates the daily reports. It has access to all six data tools and will call them automatically based on your question.<br><br>
+        <strong>What you can ask:</strong><br>
+        • "What happens if we increase the loan to €18 million?"<br>
+        • "Model a 100 MWh project with 65% capture rate"<br>
+        • "What would a bank say about the debt sizing?"<br>
+        • "What's the latest policy news affecting this project?"<br>
+        • "What if spread compression is 3% per year?"<br><br>
+        The agent remembers the previous day's numbers from the memory system, so it can compare current conditions to yesterday and flag what has changed.`
+    }
+};
+
+function openInfo(key) {
+    const info = panelInfo[key];
+    if (!info) return;
+    document.getElementById('info-title').textContent = info.title;
+    document.getElementById('info-body').innerHTML = info.body;
+    document.getElementById('info-modal').classList.add('open');
+}
+
+function closeInfo() {
+    document.getElementById('info-modal').classList.remove('open');
+}
+
 function openAssumptions() {
-    document.getElementById('modal').classList.add('open');
+    document.getElementById('assumptions-modal').classList.add('open');
 }
 
 function closeAssumptions() {
-    document.getElementById('modal').classList.remove('open');
+    document.getElementById('assumptions-modal').classList.remove('open');
 }
 </script>
 

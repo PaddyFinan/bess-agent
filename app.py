@@ -42,7 +42,7 @@ Key assumptions for this project:
 - 85% round-trip efficiency, 1.0 cycle/day, 75% capture rate
 - €60,000/MW/year ancillary services (Terna MSD market)
 - 2% annual battery degradation, 1% annual spread compression
-- €14M loan, 6% interest, 15-year tenor → €1,440,000 annual debt service
+- €14M loan, 6% interest, 15-year tenor
 - Base case uses seasonal weighted average spread (~€76/MWh)
 - DSCR thresholds: 1.30x minimum, 1.20x absolute floor
 
@@ -242,11 +242,18 @@ def api_news():
     """Latest policy news"""
     try:
         data = get_policy_news()
+
+        # Use full analysis if summary is too short
+        summary = data["summary"] if len(data["summary"]) > 100 else data["raw_analysis"][:800]
+
+        # Clean up markdown formatting
+        summary = summary.replace("**", "").replace("##", "").replace("#", "").strip()
+
         return jsonify({
             "sentiment": data["overall_sentiment"],
             "policy_signals": data["policy_signals_detected"],
             "market_signals": data["market_signals_detected"],
-            "summary": data["summary"],
+            "summary": summary,
             "full_analysis": data["raw_analysis"][:2000]
         })
     except Exception as e:
@@ -293,7 +300,23 @@ def api_chat():
             )
 
             if response.stop_reason == "tool_use":
-                messages.append({"role": "assistant", "content": response.content})
+                # Convert SDK objects to serializable dicts
+                serializable_content = []
+                for block in response.content:
+                    if block.type == "tool_use":
+                        serializable_content.append({
+                            "type": "tool_use",
+                            "id": block.id,
+                            "name": block.name,
+                            "input": block.input
+                        })
+                    elif block.type == "text":
+                        serializable_content.append({
+                            "type": "text",
+                            "text": block.text
+                        })
+
+                messages.append({"role": "assistant", "content": serializable_content})
                 tool_results = []
 
                 for block in response.content:
