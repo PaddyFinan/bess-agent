@@ -6,6 +6,7 @@ from tools.price_data import get_spread_analysis
 from tools.revenue_model import calculate_revenue
 from tools.dscr import calculate_dscr
 from tools.gas_prices import get_gas_prices
+from tools.news_monitor import get_policy_news
 from memory import save_snapshot, load_snapshot, format_memory_context
 
 load_dotenv()
@@ -21,7 +22,7 @@ storage systems (BESS) in the Italian electricity market. You work for an
 infrastructure advisory team — similar to a Big 4 TAS practice or a project 
 finance desk at a bank like BNP Paribas or Natixis.
 
-You have access to four tools:
+You have access to five tools:
 
 1. get_spread_analysis — fetches live Italian day-ahead power prices from ENTSO-E 
    and calculates daily arbitrage spread statistics over a rolling window
@@ -38,8 +39,13 @@ You have access to four tools:
    analysis. TTF is the primary driver of Italian evening peak power prices and 
    a leading indicator of spread compression risk
 
-When asked for a full analysis, always run all four tools. When asked about market 
+5. get_policy_news — searches the web for recent news relevant to Italian BESS 
+   project finance including MACSE auctions, Terna announcements, EU policy 
+   changes, and market developments
+
+When asked for a full analysis, always run all five tools. When asked about market 
 conditions specifically, run get_spread_analysis and get_gas_prices together.
+When asked about policy or regulation, run get_policy_news.
 Interpret the results like a professional analyst — don't just recite numbers, 
 explain what they mean for the project's bankability and risk profile.
 
@@ -161,6 +167,20 @@ TOOLS = [
             },
             "required": []
         }
+    },
+    {
+        "name": "get_policy_news",
+        "description": """Searches the web for recent news relevant to Italian BESS 
+        project finance — MACSE auction results, Terna announcements, EU energy 
+        storage policy changes, and market developments. Use this to provide 
+        forward-looking regulatory and policy context alongside the quantitative 
+        market analysis. Call this when asked for a full analysis or when the user 
+        asks about policy, regulation, or market outlook.""",
+        "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+        }
     }
 ]
 
@@ -200,6 +220,10 @@ def execute_tool(tool_name: str, tool_input: dict, spread_data=None, revenue_dat
     elif tool_name == "get_gas_prices":
         days = tool_input.get("days", 30)
         result = get_gas_prices(days=days)
+        return result
+
+    elif tool_name == "get_policy_news":
+        result = get_policy_news()
         return result
 
     else:
@@ -280,7 +304,6 @@ def run_agent():
                             gas_data = result
                         elif tool_name == "calculate_dscr":
                             dscr_data = result
-                            # Save snapshot when full analysis is complete
                             if spread_data and revenue_data and gas_data:
                                 save_snapshot(spread_data, revenue_data, result, gas_data)
                                 print("[Memory saved]")
