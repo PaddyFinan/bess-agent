@@ -1,6 +1,6 @@
 def calculate_dscr(
     revenue_model: dict,
-    loan_amount: float = 17_500_000,
+    loan_amount: float = 14_000_000,
     interest_rate: float = 0.06,
     loan_tenor_years: int = 15
 ) -> dict:

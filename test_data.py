@@ -7,12 +7,12 @@ print("Fetching seasonal analysis...")
 seasonal = get_seasonal_analysis()
 print(f"Annual weighted average spread: €{seasonal['annual_avg_spread']}/MWh")
 
-# Run revenue model with seasonal average + 2% compression
+# Run revenue model with seasonal average + 1% compression
 print("\nRunning revenue model with degradation + spread compression...")
 revenue = calculate_revenue(
     spread_analysis={},
     override_avg_spread=seasonal['annual_avg_spread'],
-    spread_compression_rate=0.02
+    spread_compression_rate=0.01
 )
 
 # Run DSCR

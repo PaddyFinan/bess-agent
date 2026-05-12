@@ -7,7 +7,7 @@ def calculate_revenue(
     capture_rate: float = 0.75,
     ancillary_revenue_per_mw_year: float = 60_000,
     degradation_rate: float = 0.02,
-    spread_compression_rate: float = 0.02,
+    spread_compression_rate: float = 0.01,
     project_life_years: int = 15,
     override_avg_spread: float = None,
     override_std_spread: float = None
