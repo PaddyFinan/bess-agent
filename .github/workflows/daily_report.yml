@@ -1,0 +1,41 @@
+name: BESS Daily Report
+
+on:
+  schedule:
+    # Runs at 7:00 AM Italian time (5:00 AM UTC in summer, 6:00 AM UTC in winter)
+    # Using 5:00 AM UTC to cover Italian summer time (UTC+2)
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+    # Also allows manual triggering from GitHub Actions tab
+
+jobs:
+  daily-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run daily report
+        env:
+          ENTSO_E_API_KEY: ${{ secrets.ENTSO_E_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python daily_report.py
+
+      - name: Commit and push report
+        run: |
+          git config --global user.name "BESS Agent"
+          git config --global user.email "bess-agent@github-actions"
+          git add reports/ memory.json
+          git diff --staged --quiet || git commit -m "Daily report $(date +'%Y-%m-%d')"
+          git push
