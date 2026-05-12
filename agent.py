@@ -6,6 +6,7 @@ from tools.price_data import get_spread_analysis
 from tools.revenue_model import calculate_revenue
 from tools.dscr import calculate_dscr
 from tools.gas_prices import get_gas_prices
+from memory import save_snapshot, load_snapshot, format_memory_context
 
 load_dotenv()
 
@@ -44,6 +45,10 @@ explain what they mean for the project's bankability and risk profile.
 
 When flagging risks, be specific: reference the actual numbers, explain why they 
 matter, and suggest what a lender or developer would do in response.
+
+If a previous analysis snapshot is provided in your context, compare current 
+numbers to previous numbers and flag any meaningful changes — especially DSCR 
+deterioration or gas price movements that signal spread compression risk ahead.
 
 Current market context you should weave into your analysis:
 - Italian BESS market is growing rapidly — over 1GW installed as of March 2025
@@ -161,7 +166,7 @@ TOOLS = [
 
 # ── TOOL EXECUTION ──────────────────────────────────────────────────
 
-def execute_tool(tool_name: str, tool_input: dict, spread_data=None, revenue_data=None):
+def execute_tool(tool_name: str, tool_input: dict, spread_data=None, revenue_data=None, gas_data=None):
     if tool_name == "get_spread_analysis":
         days = tool_input.get("days", 30)
         result = get_spread_analysis(days=days)
@@ -213,6 +218,12 @@ def run_agent():
     conversation_history = []
     spread_data = None
     revenue_data = None
+    gas_data = None
+    dscr_data = None
+
+    # Load previous snapshot if it exists
+    previous_snapshot = load_snapshot()
+    memory_context = format_memory_context(previous_snapshot)
 
     while True:
         user_input = input("You: ").strip()
@@ -233,7 +244,7 @@ def run_agent():
             response = client.messages.create(
                 model="claude-sonnet-4-5",
                 max_tokens=4096,
-                system=SYSTEM_PROMPT,
+                system=SYSTEM_PROMPT + f"\n\n{memory_context}",
                 tools=TOOLS,
                 messages=conversation_history
             )
@@ -257,13 +268,22 @@ def run_agent():
                             tool_name,
                             tool_input,
                             spread_data=spread_data,
-                            revenue_data=revenue_data
+                            revenue_data=revenue_data,
+                            gas_data=gas_data
                         )
 
                         if tool_name == "get_spread_analysis":
                             spread_data = result
                         elif tool_name == "calculate_revenue":
                             revenue_data = result
+                        elif tool_name == "get_gas_prices":
+                            gas_data = result
+                        elif tool_name == "calculate_dscr":
+                            dscr_data = result
+                            # Save snapshot when full analysis is complete
+                            if spread_data and revenue_data and gas_data:
+                                save_snapshot(spread_data, revenue_data, result, gas_data)
+                                print("[Memory saved]")
 
                         tool_results.append({
                             "type": "tool_result",

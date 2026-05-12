@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-05-12T12:39:15.226386",
+  "date": "2026-05-12",
+  "time": "12:39",
+  "spread": {
+    "avg_spread": 122.43,
+    "min_spread": 48.85,
+    "max_spread": 190.25,
+    "std_spread": 38.32,
+    "cv_spread": 31.3,
+    "days_analysed": 30
+  },
+  "gas": {
+    "current_price": 46.33,
+    "change_pct": -2.5,
+    "trend": "stable"
+  },
+  "revenue": {
+    "base_case": 2924397.0,
+    "downside": 2478567.0,
+    "severe_downside": 2032738.0
+  },
+  "dscr": {
+    "base_case": 1.62,
+    "downside": 1.38,
+    "severe_downside": 1.13,
+    "base_flag": "GREEN",
+    "downside_flag": "GREEN",
+    "severe_flag": "RED",
+    "deal_assessment": "BANKABLE \u2014 project supports debt financing under base and downside scenarios",
+    "annual_debt_service": 1801848.0
+  }
+}
