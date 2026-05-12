@@ -6,6 +6,7 @@ from tools.price_data import get_spread_analysis
 from tools.revenue_model import calculate_revenue
 from tools.dscr import calculate_dscr
 from tools.gas_prices import get_gas_prices
+from tools.news_monitor import get_policy_news
 from memory import save_snapshot, load_snapshot, format_memory_context
 from datetime import datetime
 
@@ -20,6 +21,9 @@ daily monitoring report for a 50 MWh / 25 MW merchant BESS project in Northern I
 Your report should be structured, professional, and focused on changes since the 
 last analysis. Flag any deterioration in DSCR, movements in TTF gas prices that 
 signal spread compression risk, or unusual spread behaviour.
+
+Also incorporate any policy or regulatory news that could affect project assumptions.
+Flag immediately if any news item requires re-underwriting of revenue assumptions.
 
 Keep the report concise — this is a daily monitoring memo, not a full due diligence 
 report. Lead with the most important finding. Use clear headings. End with a 
@@ -39,7 +43,7 @@ def run_daily_report():
     previous_snapshot = load_snapshot()
     memory_context = format_memory_context(previous_snapshot)
 
-    # ── STEP 2: RUN ALL FOUR TOOLS ──────────────────────────────────
+    # ── STEP 2: RUN ALL FIVE TOOLS ──────────────────────────────────
     print("Fetching market data...")
     spread_data = get_spread_analysis(days=30)
     print(f"  ✓ Spreads: avg €{spread_data['avg_spread']}/MWh")
@@ -54,6 +58,10 @@ def run_daily_report():
     print(f"  ✓ DSCR: {dscr_data['dscr_scenarios']['base_case']}x base / "
           f"{dscr_data['dscr_scenarios']['downside']}x downside")
 
+    print("  Searching for policy news...")
+    news_data = get_policy_news()
+    print(f"  ✓ News sentiment: {news_data['overall_sentiment'].upper()}")
+
     # ── STEP 3: SAVE SNAPSHOT ───────────────────────────────────────
     save_snapshot(spread_data, revenue_data, dscr_data, gas_data)
     print("  ✓ Memory snapshot saved\n")
@@ -61,7 +69,6 @@ def run_daily_report():
     # ── STEP 4: GENERATE REPORT WITH CLAUDE ────────────────────────
     print("Generating report...\n")
 
-    # Build the data summary to send to Claude
     data_summary = f"""
 Current market data (just fetched):
 
@@ -94,6 +101,12 @@ DSCR (€17.5M loan, 6%, 15 years → €{dscr_data['debt_structure']['annual_de
 Max supportable debt at 1.30x DSCR:
 - Base case: €{dscr_data['debt_sizing']['max_supportable_loan']['base_case']:,.0f}
 - Downside: €{dscr_data['debt_sizing']['max_supportable_loan']['downside']:,.0f}
+
+POLICY & REGULATORY NEWS:
+- Overall sentiment: {news_data['overall_sentiment'].upper()}
+- Policy signals detected: {', '.join(news_data['policy_signals_detected'])}
+- Market signals detected: {', '.join(news_data['market_signals_detected'])}
+- Analysis: {news_data['raw_analysis'][:1500]}
 """
 
     response = client.messages.create(
@@ -113,7 +126,6 @@ Max supportable debt at 1.30x DSCR:
     # ── STEP 5: PRINT AND SAVE REPORT ───────────────────────────────
     print(report)
 
-    # Save report to file with date stamp
     report_filename = f"reports/report_{datetime.now().strftime('%Y-%m-%d')}.md"
     os.makedirs("reports", exist_ok=True)
 
