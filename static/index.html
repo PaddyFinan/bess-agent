@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BESS Project Finance Agent — IT-NORTH</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #0a0e1a;
+            color: #e2e8f0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background: linear-gradient(135deg, #0f1729 0%, #1a2340 100%);
+            border-bottom: 1px solid #1e2d4a;
+            padding: 20px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+
+        .header-left p {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .live-badge {
+            background: #00C896;
+            color: #000;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .assumptions-btn {
+            background: transparent;
+            border: 1px solid #2d3f5e;
+            color: #94a3b8;
+            font-size: 12px;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .assumptions-btn:hover {
+            border-color: #4A90E2;
+            color: #4A90E2;
+        }
+
+        /* ── MAIN LAYOUT ── */
+        .main {
+            padding: 24px 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* ── VITALS ROW ── */
+        .vitals {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .vital-card {
+            background: #0f1729;
+            border: 1px solid #1e2d4a;
+            border-radius: 12px;
+            padding: 20px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vital-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+        }
+
+        .vital-card.green::before { background: #00C896; }
+        .vital-card.amber::before { background: #F5A623; }
+        .vital-card.red::before { background: #E84855; }
+        .vital-card.blue::before { background: #4A90E2; }
+
+        .vital-label {
+            font-size: 11px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+        }
+
+        .vital-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .vital-value.green { color: #00C896; }
+        .vital-value.amber { color: #F5A623; }
+        .vital-value.red { color: #E84855; }
+
+        .vital-sub {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        /* ── CHARTS GRID ── */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .chart-card {
+            background: #0f1729;
+            border: 1px solid #1e2d4a;
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .chart-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .chart-subtitle {
+            font-size: 11px;
+            color: #475569;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 220px;
+        }
+
+        /* ── SEASONAL CARD ── */
+        .seasonal-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .season-item {
+            background: #0a0e1a;
+            border: 1px solid #1e2d4a;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .season-name {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .season-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .season-days {
+            font-size: 10px;
+            color: #475569;
+            margin-top: 3px;
+        }
+
+        /* ── BOTTOM GRID ── */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .panel-card {
+            background: #0f1729;
+            border: 1px solid #1e2d4a;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sentiment-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .sentiment-badge.bullish { background: #00C89620; color: #00C896; border: 1px solid #00C89640; }
+        .sentiment-badge.bearish { background: #E8485520; color: #E84855; border: 1px solid #E8485540; }
+        .sentiment-badge.neutral { background: #4A90E220; color: #4A90E2; border: 1px solid #4A90E240; }
+
+        .news-content {
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.7;
+            flex: 1;
+            overflow-y: auto;
+            max-height: 200px;
+        }
+
+        .signal-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .signal-tag {
+            background: #4A90E210;
+            border: 1px solid #4A90E230;
+            color: #4A90E2;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .report-content {
+            font-size: 11px;
+            color: #94a3b8;
+            line-height: 1.7;
+            flex: 1;
+            overflow-y: auto;
+            max-height: 200px;
+            font-family: 'Monaco', monospace;
+            white-space: pre-wrap;
+        }
+
+        /* ── CHAT PANEL ── */
+        .chat-card {
+            background: #0f1729;
+            border: 1px solid #1e2d4a;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .message.user {
+            background: #1e3a5f;
+            border: 1px solid #2d5a8e;
+            color: #e2e8f0;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.agent {
+            background: #131d30;
+            border: 1px solid #1e2d4a;
+            color: #94a3b8;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.tool-call {
+            background: #0a1020;
+            border: 1px solid #1e2d4a;
+            color: #4A90E2;
+            font-size: 11px;
+            font-family: monospace;
+            align-self: flex-start;
+            padding: 8px 12px;
+        }
+
+        .message.loading {
+            background: #0a1020;
+            border: 1px solid #1e2d4a;
+            color: #475569;
+            font-size: 12px;
+            align-self: flex-start;
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: #0a0e1a;
+            border: 1px solid #1e2d4a;
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #e2e8f0;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus {
+            border-color: #4A90E2;
+        }
+
+        .chat-input::placeholder {
+            color: #475569;
+        }
+
+        .send-btn {
+            background: #4A90E2;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .send-btn:hover { background: #357abd; }
+        .send-btn:disabled { background: #1e2d4a; color: #475569; cursor: not-allowed; }
+
+        .quick-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .quick-btn {
+            background: transparent;
+            border: 1px solid #1e2d4a;
+            color: #64748b;
+            font-size: 11px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-btn:hover {
+            border-color: #4A90E2;
+            color: #4A90E2;
+        }
+
+        /* ── ASSUMPTIONS MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: #0f1729;
+            border: 1px solid #1e2d4a;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 24px;
+        }
+
+        .assumption-section {
+            margin-bottom: 24px;
+        }
+
+        .assumption-section h3 {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #4A90E2;
+            margin-bottom: 12px;
+        }
+
+        .assumption-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #1e2d4a;
+            font-size: 13px;
+        }
+
+        .assumption-row:last-child { border-bottom: none; }
+
+        .assumption-key { color: #94a3b8; }
+        .assumption-val { color: #fff; font-weight: 600; }
+        .assumption-src { color: #475569; font-size: 11px; }
+
+        .modal-close {
+            float: right;
+            background: transparent;
+            border: 1px solid #1e2d4a;
+            color: #94a3b8;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* ── LOADING STATE ── */
+        .loading-text {
+            color: #475569;
+            font-size: 12px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1e2d4a; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-left">
+        <h1>BESS Project Finance Agent</h1>
+        <p>50 MWh / 25 MW Merchant Battery — IT-NORTH Bidding Zone, Northern Italy</p>
+    </div>
+    <div class="header-right">
+        <span class="live-badge">● LIVE</span>
+        <button class="assumptions-btn" onclick="openAssumptions()">View Assumptions</button>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- VITALS ROW -->
+    <div class="vitals">
+        <div class="vital-card blue" id="card-spread">
+            <div class="vital-label">30-Day Avg Spread</div>
+            <div class="vital-value" id="val-spread">—</div>
+            <div class="vital-sub">€/MWh · IT-NORTH Day-Ahead</div>
+        </div>
+        <div class="vital-card blue" id="card-ttf">
+            <div class="vital-label">TTF Gas Price</div>
+            <div class="vital-value" id="val-ttf">—</div>
+            <div class="vital-sub" id="val-ttf-sub">€/MWh · European Benchmark</div>
+        </div>
+        <div class="vital-card" id="card-dscr">
+            <div class="vital-label">Base Case DSCR (Year 1)</div>
+            <div class="vital-value" id="val-dscr">—</div>
+            <div class="vital-sub" id="val-dscr-sub">Seasonal avg · 1% compression</div>
+        </div>
+        <div class="vital-card" id="card-min-dscr">
+            <div class="vital-label">Minimum DSCR</div>
+            <div class="vital-value" id="val-min-dscr">—</div>
+            <div class="vital-sub" id="val-min-dscr-sub">Across 15-year project life</div>
+        </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="charts-grid">
+        <div class="chart-card">
+            <div class="chart-title">30-Day Power Price Spread</div>
+            <div class="chart-subtitle">Daily arbitrage spread — IT-NORTH bidding zone (€/MWh)</div>
+            <div class="chart-container">
+                <canvas id="spreadChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">15-Year DSCR Trajectory</div>
+            <div class="chart-subtitle">All scenarios with degradation + 1% spread compression</div>
+            <div class="chart-container">
+                <canvas id="dscrChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEASONAL -->
+    <div class="chart-card" style="margin-bottom: 24px;">
+        <div class="chart-title">Seasonal Spread Analysis</div>
+        <div class="chart-subtitle" id="seasonal-note">Loading 12 months of data...</div>
+        <div class="seasonal-grid" id="seasonal-grid">
+            <div class="loading-text">Loading...</div>
+        </div>
+    </div>
+
+    <!-- NEWS + REPORT -->
+    <div class="bottom-grid">
+        <div class="panel-card">
+            <div class="panel-title">
+                Policy & Market News
+                <span class="sentiment-badge neutral" id="news-sentiment">—</span>
+            </div>
+            <div class="news-content" id="news-content">Loading news...</div>
+            <div class="signal-tags" id="signal-tags"></div>
+        </div>
+        <div class="panel-card">
+            <div class="panel-title">
+                Latest Daily Report
+                <span style="font-size:10px; color:#475569; font-weight:400;" id="report-filename"></span>
+            </div>
+            <div class="report-content" id="report-content">Loading report...</div>
+        </div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="chat-card">
+        <div class="panel-title">Chat with the Agent</div>
+        <div class="quick-questions">
+            <button class="quick-btn" onclick="quickAsk('Analyse the project using the seasonal average spread')">Full analysis</button>
+            <button class="quick-btn" onclick="quickAsk('What happens if we increase the loan to €18 million?')">Stress test loan</button>
+            <button class="quick-btn" onclick="quickAsk('What is the latest policy news affecting this project?')">Policy news</button>
+            <button class="quick-btn" onclick="quickAsk('What would a bank say about this deal?')">Bank perspective</button>
+            <button class="quick-btn" onclick="quickAsk('Model a 100 MWh project with 65% capture rate')">Different project</button>
+            <button class="quick-btn" onclick="quickAsk('What happens if spread compression is 3% per year?')">Higher compression</button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message agent">
+                Hello. I'm your BESS project finance analyst. I have access to live Italian power prices, TTF gas data, a 15-year financial model, and real-time policy news. Ask me anything about this project.
+            </div>
+        </div>
+        <div class="chat-input-row">
+            <input type="text" class="chat-input" id="chat-input" 
+                   placeholder="Ask me anything about this project..."
+                   onkeypress="if(event.key==='Enter') sendMessage()">
+            <button class="send-btn" id="send-btn" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- ASSUMPTIONS MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeAssumptions()">
+    <div class="modal">
+        <button class="modal-close" onclick="closeAssumptions()">Close</button>
+        <h2>Model Assumptions & Data Sources</h2>
+
+        <div class="assumption-section">
+            <h3>Project Specifications</h3>
+            <div class="assumption-row">
+                <span class="assumption-key">Battery capacity</span>
+                <span class="assumption-val">50 MWh / 25 MW</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Duration</span>
+                <span class="assumption-val">2 hours</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Chemistry</span>
+                <span class="assumption-val">LFP (Lithium Iron Phosphate)</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Round-trip efficiency</span>
+                <span class="assumption-val">85%</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Cycles per day</span>
+                <span class="assumption-val">1.0</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Capture rate</span>
+                <span class="assumption-val">75% · Conservative merchant estimate</span>
+            </div>
+        </div>
+
+        <div class="assumption-section">
+            <h3>Revenue Assumptions</h3>
+            <div class="assumption-row">
+                <span class="assumption-key">Spread input</span>
+                <span class="assumption-val">Seasonal weighted average (~€76/MWh)</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Ancillary services</span>
+                <span class="assumption-val">€60,000/MW/year · Terna MSD market</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Annual ancillary revenue</span>
+                <span class="assumption-val">€1,500,000 (fixed)</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Ancillary source</span>
+                <span class="assumption-src">2024-2025 Italian capacity market auctions</span>
+            </div>
+        </div>
+
+        <div class="assumption-section">
+            <h3>Degradation & Compression</h3>
+            <div class="assumption-row">
+                <span class="assumption-key">Battery degradation</span>
+                <span class="assumption-val">2% per year · Standard LFP</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Spread compression</span>
+                <span class="assumption-val">1% per year · Conservative Italian market</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Year 1 capacity</span>
+                <span class="assumption-val">50.0 MWh</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Year 15 capacity</span>
+                <span class="assumption-val">37.7 MWh (after degradation)</span>
+            </div>
+        </div>
+
+        <div class="assumption-section">
+            <h3>Debt Structure</h3>
+            <div class="assumption-row">
+                <span class="assumption-key">Total project cost</span>
+                <span class="assumption-val">€25 million · 2026 benchmarks</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Loan amount</span>
+                <span class="assumption-val">€14 million · 56% gearing</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Interest rate</span>
+                <span class="assumption-val">6.0% · Conservative (EURIBOR ~2.88% + margin)</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Loan tenor</span>
+                <span class="assumption-val">15 years</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Annual debt service</span>
+                <span class="assumption-val">€1,440,000</span>
+            </div>
+        </div>
+
+        <div class="assumption-section">
+            <h3>DSCR Thresholds</h3>
+            <div class="assumption-row">
+                <span class="assumption-key">Minimum (GREEN)</span>
+                <span class="assumption-val">≥ 1.30x</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Tight (AMBER)</span>
+                <span class="assumption-val">1.20x – 1.29x</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Breach (RED)</span>
+                <span class="assumption-val">< 1.20x</span>
+            </div>
+        </div>
+
+        <div class="assumption-section">
+            <h3>Data Sources</h3>
+            <div class="assumption-row">
+                <span class="assumption-key">Power prices</span>
+                <span class="assumption-val">ENTSO-E Transparency Platform</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Gas prices</span>
+                <span class="assumption-val">TTF Futures via Yahoo Finance</span>
+            </div>
+            <div class="assumption-row">
+                <span class="assumption-key">Policy news</span>
+                <span class="assumption-val">Claude Web Search (real-time)</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ── STATE ────────────────────────────────────────────────────────────
+let chatMessages = [];
+let spreadChart = null;
+let dscrChart = null;
+
+// ── CHART DEFAULTS ───────────────────────────────────────────────────
+Chart.defaults.color = '#64748b';
+Chart.defaults.borderColor = '#1e2d4a';
+
+// ── LOAD ALL DATA ON START ───────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    loadStatus();
+    loadSpreadChart();
+    loadDSCRChart();
+    loadSeasonal();
+    loadNews();
+    loadReport();
+});
+
+// ── STATUS ───────────────────────────────────────────────────────────
+async function loadStatus() {
+    try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+
+        document.getElementById('val-spread').textContent = `€${data.avg_spread}`;
+
+        const ttfEl = document.getElementById('val-ttf');
+        ttfEl.textContent = `€${data.ttf_price}`;
+        document.getElementById('val-ttf-sub').textContent =
+            `${data.ttf_change_pct > 0 ? '+' : ''}${data.ttf_change_pct}% 30d · ${data.ttf_trend}`;
+
+        const dscrEl = document.getElementById('val-dscr');
+        dscrEl.textContent = `${data.base_dscr}x`;
+        setDSCRColor(dscrEl, document.getElementById('card-dscr'), data.base_flag);
+
+        const minEl = document.getElementById('val-min-dscr');
+        minEl.textContent = `${data.min_dscr}x`;
+        document.getElementById('val-min-dscr-sub').textContent =
+            `Worst case: year ${data.min_dscr_year} · Base scenario`;
+        const minFlag = data.min_dscr >= 1.30 ? 'GREEN' : data.min_dscr >= 1.20 ? 'AMBER' : 'RED';
+        setDSCRColor(minEl, document.getElementById('card-min-dscr'), minFlag);
+
+    } catch (e) {
+        console.error('Status error:', e);
+    }
+}
+
+function setDSCRColor(el, card, flag) {
+    const colorMap = { GREEN: '#00C896', AMBER: '#F5A623', RED: '#E84855' };
+    const classMap = { GREEN: 'green', AMBER: 'amber', RED: 'red' };
+    el.style.color = colorMap[flag] || '#fff';
+    card.className = `vital-card ${classMap[flag] || ''}`;
+}
+
+// ── SPREAD CHART ─────────────────────────────────────────────────────
+async function loadSpreadChart() {
+    try {
+        const res = await fetch('/api/spreads');
+        const data = await res.json();
+
+        const ctx = document.getElementById('spreadChart').getContext('2d');
+        if (spreadChart) spreadChart.destroy();
+
+        spreadChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.dates.map(d => d.slice(5)),
+                datasets: [
+                    {
+                        label: 'Daily Spread',
+                        data: data.spreads,
+                        borderColor: '#4A90E2',
+                        backgroundColor: 'rgba(74,144,226,0.08)',
+                        borderWidth: 2,
+                        pointRadius: 2,
+                        fill: true,
+                        tension: 0.3
+                    },
+                    {
+                        label: `Avg €${data.avg_spread}/MWh`,
+                        data: Array(data.dates.length).fill(data.avg_spread),
+                        borderColor: '#00C896',
+                        borderWidth: 1.5,
+                        borderDash: [4, 4],
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true, labels: { font: { size: 11 }, boxWidth: 12 } }
+                },
+                scales: {
+                    x: { ticks: { font: { size: 10 }, maxTicksLimit: 8 } },
+                    y: {
+                        ticks: { font: { size: 10 }, callback: v => `€${v}` },
+                        title: { display: true, text: '€/MWh', font: { size: 10 } }
+                    }
+                }
+            }
+        });
+    } catch (e) {
+        console.error('Spread chart error:', e);
+    }
+}
+
+// ── DSCR CHART ───────────────────────────────────────────────────────
+async function loadDSCRChart() {
+    try {
+        const res = await fetch('/api/dscr_trajectory');
+        const data = await res.json();
+
+        const ctx = document.getElementById('dscrChart').getContext('2d');
+        if (dscrChart) dscrChart.destroy();
+
+        dscrChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.years.map(y => `Yr ${y}`),
+                datasets: [
+                    {
+                        label: 'Base Case',
+                        data: data.base_case,
+                        borderColor: '#00C896',
+                        backgroundColor: 'rgba(0,200,150,0.05)',
+                        borderWidth: 2,
+                        pointRadius: 2,
+                        fill: false,
+                        tension: 0.2
+                    },
+                    {
+                        label: 'Downside',
+                        data: data.downside,
+                        borderColor: '#F5A623',
+                        borderWidth: 2,
+                        pointRadius: 2,
+                        fill: false,
+                        tension: 0.2
+                    },
+                    {
+                        label: 'Severe Downside',
+                        data: data.severe_downside,
+                        borderColor: '#E84855',
+                        borderWidth: 2,
+                        pointRadius: 2,
+                        fill: false,
+                        tension: 0.2
+                    },
+                    {
+                        label: '1.30x Minimum',
+                        data: Array(15).fill(1.30),
+                        borderColor: 'rgba(255,255,255,0.2)',
+                        borderWidth: 1,
+                        borderDash: [4, 4],
+                        pointRadius: 0
+                    },
+                    {
+                        label: '1.20x Floor',
+                        data: Array(15).fill(1.20),
+                        borderColor: 'rgba(232,72,85,0.4)',
+                        borderWidth: 1,
+                        borderDash: [4, 4],
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true, labels: { font: { size: 10 }, boxWidth: 12 } }
+                },
+                scales: {
+                    x: { ticks: { font: { size: 10 } } },
+                    y: {
+                        min: 0.8,
+                        ticks: { font: { size: 10 }, callback: v => `${v}x` },
+                        title: { display: true, text: 'DSCR', font: { size: 10 } }
+                    }
+                }
+            }
+        });
+    } catch (e) {
+        console.error('DSCR chart error:', e);
+    }
+}
+
+// ── SEASONAL ─────────────────────────────────────────────────────────
+async function loadSeasonal() {
+    try {
+        const res = await fetch('/api/seasonal');
+        const data = await res.json();
+
+        document.getElementById('seasonal-note').textContent = data.seasonality_note;
+
+        const seasons = ['spring', 'summer', 'autumn', 'winter'];
+        const icons = ['🌸', '☀️', '🍂', '❄️'];
+        const colors = ['#00C896', '#F5A623', '#E8A05A', '#4A90E2'];
+
+        document.getElementById('seasonal-grid').innerHTML = seasons.map((s, i) => `
+            <div class="season-item">
+                <div class="season-name">${icons[i]} ${s}</div>
+                <div class="season-value" style="color:${colors[i]}">
+                    €${data.spreads[i] || '—'}
+                </div>
+                <div class="season-days">${data.days[i]} days</div>
+            </div>
+        `).join('') + `
+            <div class="season-item" style="grid-column: span 4; background: #0f1729; border-color: #2d3f5e;">
+                <div class="season-name">Annual Weighted Average</div>
+                <div class="season-value" style="color: #fff; font-size: 22px;">€${data.annual_avg}/MWh</div>
+                <div class="season-days">Seasonality factor: ${data.seasonality_factor}x (spring vs winter)</div>
+            </div>
+        `;
+    } catch (e) {
+        console.error('Seasonal error:', e);
+    }
+}
+
+// ── NEWS ─────────────────────────────────────────────────────────────
+async function loadNews() {
+    try {
+        const res = await fetch('/api/news');
+        const data = await res.json();
+
+        const badge = document.getElementById('news-sentiment');
+        badge.textContent = data.sentiment.toUpperCase();
+        badge.className = `sentiment-badge ${data.sentiment}`;
+
+        document.getElementById('news-content').textContent = data.summary;
+
+        const tags = [...(data.policy_signals || []), ...(data.market_signals || [])];
+        document.getElementById('signal-tags').innerHTML = tags.slice(0, 8)
+            .map(t => `<span class="signal-tag">${t}</span>`).join('');
+    } catch (e) {
+        document.getElementById('news-content').textContent = 'News unavailable.';
+    }
+}
+
+// ── REPORT ───────────────────────────────────────────────────────────
+async function loadReport() {
+    try {
+        const res = await fetch('/api/report');
+        const data = await res.json();
+        document.getElementById('report-content').textContent = data.content;
+        document.getElementById('report-filename').textContent = data.filename || '';
+    } catch (e) {
+        document.getElementById('report-content').textContent = 'No report available.';
+    }
+}
+
+// ── CHAT ─────────────────────────────────────────────────────────────
+function quickAsk(question) {
+    document.getElementById('chat-input').value = question;
+    sendMessage();
+}
+
+async function sendMessage() {
+    const input = document.getElementById('chat-input');
+    const message = input.value.trim();
+    if (!message) return;
+
+    input.value = '';
+    const btn = document.getElementById('send-btn');
+    btn.disabled = true;
+
+    appendMessage('user', message);
+    chatMessages.push({ role: 'user', content: message });
+
+    const loadingEl = appendMessage('loading', '⟳ Agent is thinking...');
+
+    try {
+        const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages: chatMessages })
+        });
+
+        const data = await res.json();
+        loadingEl.remove();
+
+        if (data.error) {
+            appendMessage('agent', `Error: ${data.error}`);
+        } else {
+            chatMessages = data.messages;
+            appendMessage('agent', data.response);
+        }
+    } catch (e) {
+        loadingEl.remove();
+        appendMessage('agent', 'Connection error. Is the server running?');
+    }
+
+    btn.disabled = false;
+    scrollChat();
+}
+
+function appendMessage(type, text) {
+    const container = document.getElementById('chat-messages');
+    const el = document.createElement('div');
+    el.className = `message ${type}`;
+    el.textContent = text;
+    container.appendChild(el);
+    scrollChat();
+    return el;
+}
+
+function scrollChat() {
+    const container = document.getElementById('chat-messages');
+    container.scrollTop = container.scrollHeight;
+}
+
+// ── MODAL ────────────────────────────────────────────────────────────
+function openAssumptions() {
+    document.getElementById('modal').classList.add('open');
+}
+
+function closeAssumptions() {
+    document.getElementById('modal').classList.remove('open');
+}
+</script>
+
+</body>
+</html>
