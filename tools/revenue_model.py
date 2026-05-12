@@ -5,18 +5,22 @@ def calculate_revenue(
     efficiency: float = 0.85,
     cycles_per_day: float = 1.0,
     capture_rate: float = 0.75,
-    ancillary_revenue_per_mw_year: float = 60_000
+    ancillary_revenue_per_mw_year: float = 60_000,
+    degradation_rate: float = 0.02,
+    project_life_years: int = 15
 ) -> dict:
     """
     Calculates projected annual revenue for a BESS project across
     three scenarios: base case, downside, and severe downside.
 
+    Now includes a year-by-year degradation curve — battery capacity
+    declines at degradation_rate per year, reducing revenue over the
+    project life. This is critical for project finance modelling as
+    lenders underwrite against the minimum DSCR year, not just year 1.
+
     Revenue is stacked from two sources:
     1. Energy arbitrage — exploiting daily power price spreads
     2. Ancillary services — frequency regulation payments from Terna
-
-    This reflects how real Italian BESS projects generate revenue,
-    as modelled in project finance due diligence.
 
     Args:
         spread_analysis: Dictionary returned by get_spread_analysis()
@@ -28,15 +32,20 @@ def calculate_revenue(
         ancillary_revenue_per_mw_year: Annual ancillary service payment
                                        per MW of capacity in euros
                                        (default €60,000/MW/year)
+        degradation_rate: Annual capacity degradation as decimal (default 0.02 = 2%)
+        project_life_years: Number of years to model (default 15)
 
     Returns:
         Dictionary containing:
         - project_specs: all input assumptions used
-        - arbitrage_revenue: energy arbitrage revenue for each scenario
-        - ancillary_revenue: fixed ancillary services revenue
-        - total_revenue: combined stacked revenue for each scenario
-        - daily_revenue: daily arbitrage revenue for each scenario
         - spreads: effective spread used in each scenario
+        - arbitrage_revenue: year 1 arbitrage revenue for each scenario
+        - ancillary_revenue: fixed ancillary services revenue
+        - annual_revenue: year 1 total stacked revenue for each scenario
+        - daily_revenue: daily arbitrage revenue for each scenario
+        - degradation_schedule: year-by-year revenue for each scenario
+        - year1_capacity_mwh: starting capacity
+        - final_year_capacity_mwh: capacity in final year after degradation
     """
 
     # ── EXTRACT SPREAD STATISTICS ───────────────────────────────────
@@ -51,34 +60,62 @@ def calculate_revenue(
     downside_spread = (avg_spread - std_spread) * capture_rate
     severe_spread = max((avg_spread - (2 * std_spread)) * capture_rate, 0)
 
-    # ── ARBITRAGE REVENUE ───────────────────────────────────────────
-    # Daily Revenue = Effective Spread × Capacity × Efficiency × Cycles
-    # Annual Revenue = Daily Revenue × 365
+    # ── YEAR 1 ARBITRAGE REVENUE ────────────────────────────────────
+    # Uses full capacity — degradation not yet applied
 
-    def calc_arbitrage_annual(spread):
-        daily = spread * capacity_mwh * efficiency * cycles_per_day
+    def calc_arbitrage_annual(spread, capacity):
+        daily = spread * capacity * efficiency * cycles_per_day
         return round(daily * 365, 0)
 
     def calc_arbitrage_daily(spread):
         return round(spread * capacity_mwh * efficiency * cycles_per_day, 2)
 
-    base_arbitrage = calc_arbitrage_annual(base_spread)
-    downside_arbitrage = calc_arbitrage_annual(downside_spread)
-    severe_arbitrage = calc_arbitrage_annual(severe_spread)
+    base_arbitrage_y1 = calc_arbitrage_annual(base_spread, capacity_mwh)
+    downside_arbitrage_y1 = calc_arbitrage_annual(downside_spread, capacity_mwh)
+    severe_arbitrage_y1 = calc_arbitrage_annual(severe_spread, capacity_mwh)
 
     # ── ANCILLARY SERVICES REVENUE ──────────────────────────────────
-    # Fixed annual payment from Terna for frequency regulation
-    # Based on MW capacity — same across all scenarios
-    # Ancillary revenue is treated as fixed — it doesn't vary with
-    # power price spreads the way arbitrage does
+    # Fixed annual payment — does not degrade with battery capacity
+    # Ancillary services are paid per MW of power capacity, not MWh
 
     ancillary_annual = round(power_capacity_mw * ancillary_revenue_per_mw_year, 0)
 
-    # ── TOTAL STACKED REVENUE ───────────────────────────────────────
+    # ── DEGRADATION SCHEDULE ────────────────────────────────────────
+    # Calculate revenue for each year of the project life
+    # Capacity declines by degradation_rate each year
+    # Ancillary revenue stays fixed (paid per MW, not MWh)
 
-    base_total = base_arbitrage + ancillary_annual
-    downside_total = downside_arbitrage + ancillary_annual
-    severe_total = severe_arbitrage + ancillary_annual
+    degradation_schedule = {
+        "base_case": [],
+        "downside": [],
+        "severe_downside": [],
+        "capacity_mwh_by_year": [],
+        "degradation_factor_by_year": []
+    }
+
+    for year in range(1, project_life_years + 1):
+        # Degradation factor — capacity as fraction of original
+        degradation_factor = (1 - degradation_rate) ** (year - 1)
+        effective_capacity = capacity_mwh * degradation_factor
+
+        # Arbitrage revenue scales with capacity
+        base_arb = calc_arbitrage_annual(base_spread, effective_capacity)
+        downside_arb = calc_arbitrage_annual(downside_spread, effective_capacity)
+        severe_arb = calc_arbitrage_annual(severe_spread, effective_capacity)
+
+        # Total revenue = arbitrage (degrading) + ancillary (fixed)
+        base_total = base_arb + ancillary_annual
+        downside_total = downside_arb + ancillary_annual
+        severe_total = severe_arb + ancillary_annual
+
+        degradation_schedule["base_case"].append(round(base_total, 0))
+        degradation_schedule["downside"].append(round(downside_total, 0))
+        degradation_schedule["severe_downside"].append(round(severe_total, 0))
+        degradation_schedule["capacity_mwh_by_year"].append(round(effective_capacity, 2))
+        degradation_schedule["degradation_factor_by_year"].append(round(degradation_factor, 4))
+
+    # Final year capacity
+    final_capacity = capacity_mwh * (1 - degradation_rate) ** (project_life_years - 1)
 
     return {
         "project_specs": {
@@ -88,6 +125,8 @@ def calculate_revenue(
             "cycles_per_day": cycles_per_day,
             "capture_rate_pct": capture_rate * 100,
             "ancillary_rate_per_mw": ancillary_revenue_per_mw_year,
+            "degradation_rate_pct": degradation_rate * 100,
+            "project_life_years": project_life_years,
             "days_of_data": days_analysed
         },
         "spreads": {
@@ -96,22 +135,25 @@ def calculate_revenue(
             "severe_spread": round(severe_spread, 2)
         },
         "arbitrage_revenue": {
-            "base_case": base_arbitrage,
-            "downside": downside_arbitrage,
-            "severe_downside": severe_arbitrage
+            "base_case": base_arbitrage_y1,
+            "downside": downside_arbitrage_y1,
+            "severe_downside": severe_arbitrage_y1
         },
         "ancillary_revenue": {
             "annual": ancillary_annual,
             "note": f"Fixed: €{ancillary_revenue_per_mw_year:,.0f}/MW/year × {power_capacity_mw}MW"
         },
         "annual_revenue": {
-            "base_case": base_total,
-            "downside": downside_total,
-            "severe_downside": severe_total
+            "base_case": degradation_schedule["base_case"][0],
+            "downside": degradation_schedule["downside"][0],
+            "severe_downside": degradation_schedule["severe_downside"][0]
         },
         "daily_revenue": {
             "base_case": calc_arbitrage_daily(base_spread),
             "downside": calc_arbitrage_daily(downside_spread),
             "severe_downside": calc_arbitrage_daily(severe_spread)
-        }
+        },
+        "degradation_schedule": degradation_schedule,
+        "year1_capacity_mwh": capacity_mwh,
+        "final_year_capacity_mwh": round(final_capacity, 2)
     }
