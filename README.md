@@ -1,6 +1,6 @@
 # BESS Project Finance Agent
 
-An autonomous AI agent that monitors Italian battery storage project finance in real time. Pulls live market data, models revenue, stress tests debt coverage, and generates daily reports — without any manual input.
+An autonomous AI agent that monitors Italian battery storage project finance in real time. Pulls live market data, models revenue across a 15-year degradation curve, stress tests debt coverage, monitors policy news, and generates daily reports — without any manual input.
 
 Built in Python using the Anthropic Claude API with autonomous tool use and GitHub Actions scheduling.
 
@@ -10,7 +10,7 @@ Built in Python using the Anthropic Claude API with autonomous tool use and GitH
 
 I'm a 22 year old economics student heading to Bocconi to study Accounting and Financial Management, with a focus on breaking into renewable energy finance. I built this project to teach myself AI agent development while actually learning the domain I want to work in.
 
-The idea came from a simple question: what does a junior analyst actually do when they're stress testing a battery storage deal? They pull market data, model revenue, calculate DSCRs, and flag risks. So I built an agent that does exactly that — autonomously, from a plain English question.
+The idea came from a simple question: what does a junior analyst actually do when they're stress testing a battery storage deal? They pull market data, model revenue, calculate DSCRs across the project life, and flag risks. So I built an agent that does exactly that — autonomously, from a plain English question.
 
 ---
 
@@ -20,10 +20,11 @@ There are two ways to use it:
 
 **Conversational mode** — run `agent.py` and ask questions in plain English:
 
-- *"Analyse our Italian BESS project"*
+- *"Analyse our Italian BESS project including the degradation curve"*
 - *"What happens if we increase the loan to €22 million?"*
 - *"Stress test a 100 MWh project with a 65% capture rate"*
-- *"What if ancillary services drop to €45,000 per MW?"*
+- *"What does the bank say about our debt sizing?"*
+- *"What's the latest policy news affecting the project?"*
 
 Claude decides which tools to call, chains them together, and produces written analysis. Every assumption is adjustable on the fly.
 
@@ -37,7 +38,9 @@ A battery storage project earns money by charging when electricity is cheap and 
 
 The project also earns ancillary services revenue — Terna (Italy's grid operator) pays batteries just to be available for frequency regulation, regardless of whether they actually discharge.
 
-Combined, these revenue streams are stress tested against the project's debt service obligations. The key metric is the **Debt Service Coverage Ratio (DSCR)** — how many euros of revenue the project generates for every euro of debt it needs to repay. Banks require a minimum of 1.20-1.30x. Below that is a covenant breach.
+**Battery degradation** is a critical factor in project finance. Lithium-ion batteries lose roughly 2% of their capacity each year. A battery that starts at 50 MWh in year 1 will only deliver 37.7 MWh by year 15. This means revenue declines each year while the debt service payment stays fixed — so the DSCR deteriorates over time. Lenders underwrite against the **minimum DSCR year** (usually year 14 or 15), not just year 1.
+
+Combined revenue streams are stress tested against the project's debt service obligations. The key metric is the **Debt Service Coverage Ratio (DSCR)** — how many euros of revenue the project generates for every euro of debt it needs to repay. Banks require a minimum of 1.20-1.30x. Below that is a covenant breach.
 
 ---
 
@@ -48,9 +51,10 @@ daily_report.py           ← Autonomous scheduled run
 memory.py                 ← Snapshot system for trend comparison
 tools/
 price_data.py         ← Tool 1: Live ENTSO-E power prices
-revenue_model.py      ← Tool 2: Stacked BESS revenue model
-dscr.py               ← Tool 3: DSCR calculator and debt sizing
+revenue_model.py      ← Tool 2: Stacked revenue with degradation curve
+dscr.py               ← Tool 3: 15-year DSCR schedule and debt sizing
 gas_prices.py         ← Tool 4: TTF gas prices as leading indicator
+news_monitor.py       ← Tool 5: Policy news via Claude web search
 reports/                  ← Auto-generated daily reports
 .github/workflows/
 daily_report.yml      ← GitHub Actions scheduler
@@ -59,19 +63,22 @@ Claude receives tool definitions, autonomously decides which tools to call based
 
 ---
 
-## The four tools
+## The five tools
 
 **Tool 1 — Italian power prices**
 Fetches live day-ahead electricity prices for the IT-NORTH bidding zone from the ENTSO-E Transparency Platform. Calculates daily arbitrage spread statistics across a rolling 30-day window — average, minimum, maximum, standard deviation, and coefficient of variation. Automatically excludes partial days and tomorrow's forecast data.
 
-**Tool 2 — Revenue model**
-Models annual BESS revenue by stacking two sources: energy arbitrage (spread × capacity × efficiency × capture rate × 365) and ancillary services (fixed €/MW/year payment from Terna's MSD market). Returns revenue across base case, downside (−1 standard deviation), and severe downside (−2 standard deviations) scenarios.
+**Tool 2 — Revenue model with degradation**
+Models annual BESS revenue by stacking two sources: energy arbitrage and ancillary services. Returns both year 1 revenue and a full 15-year degradation schedule — showing how revenue declines as battery capacity erodes at 2% per year. The degradation schedule feeds directly into the DSCR calculator.
 
-**Tool 3 — DSCR calculator**
-Calculates Debt Service Coverage Ratio across all three scenarios using the annuity formula to derive annual debt service from loan amount, interest rate, and tenor. Flags each scenario GREEN (≥1.30x), AMBER (1.20-1.29x), or RED (<1.20x). Also works backwards from revenue to size the maximum supportable loan at a 1.30x DSCR threshold.
+**Tool 3 — DSCR calculator with 15-year schedule**
+Calculates Debt Service Coverage Ratio for every year of the project life using the degradation schedule from Tool 2. Identifies the minimum DSCR year — the number lenders actually underwrite against. Flags each scenario GREEN (≥1.30x), AMBER (1.20-1.29x), or RED (<1.20x). Sizes the maximum supportable loan against the worst revenue year, not year 1.
 
 **Tool 4 — TTF gas prices**
 Fetches TTF natural gas futures prices via Yahoo Finance. TTF is the European gas benchmark and the primary driver of Italian evening peak power prices — a falling TTF is a leading indicator of spread compression before it shows up in the power price data. Returns current price, 30-day trend, and a plain English signal on what the movement means for BESS spread economics.
+
+**Tool 5 — Policy news monitor**
+Uses Claude's built-in web search to find recent news relevant to Italian BESS project finance — MACSE auction results, Terna announcements, EU energy storage policy, and market developments. Returns a structured analysis of what each development means for project economics, flagging whether each item is bullish, bearish, or neutral for the project.
 
 ---
 
@@ -79,20 +86,11 @@ Fetches TTF natural gas futures prices via Yahoo Finance. TTF is the European ga
 
 Every time a full analysis runs, the agent saves a snapshot of key metrics to `memory.json`. The next run loads that snapshot and compares current numbers to previous numbers. Claude flags any meaningful changes — DSCR deterioration, spread compression, gas price movements that signal risk ahead.
 
-This is what makes it a monitoring tool rather than just a calculator. Over time the snapshot history tells the story of whether market conditions are improving or deteriorating.
-
 ---
 
 ## Autonomous scheduling
 
-GitHub Actions runs the full analysis every morning at 7am Italian time on GitHub's servers. The workflow:
-
-1. Spins up a clean Ubuntu machine
-2. Installs Python dependencies
-3. Runs `daily_report.py`
-4. Commits the generated report and updated memory snapshot back to the repository
-
-Reports accumulate in the `reports/` folder — one per day, automatically.
+GitHub Actions runs the full analysis every morning at 7am Italian time on GitHub's servers. The workflow fetches live data across all five tools, generates a daily monitoring report, and commits it to the `reports/` folder automatically.
 
 ---
 
@@ -104,6 +102,10 @@ Reports accumulate in the `reports/` folder — one per day, automatically.
 | Round-trip efficiency | 85% | Industry standard LFP chemistry |
 | Capture rate | 75% | Conservative merchant estimate |
 | Cycles per day | 1.0 | Standard arbitrage operation |
+| Degradation rate | 2% per year | Standard LFP degradation assumption |
+| Project life | 15 years | Matched to loan tenor |
+| Year 1 capacity | 50 MWh | — |
+| Year 15 capacity | 37.7 MWh | After 14 years of 2% degradation |
 | Ancillary services rate | €60,000/MW/year | 2024-2025 Italian capacity market auctions |
 | Total project cost | €25 million | Current 2026 installed cost benchmarks |
 | Loan amount | €17.5 million | 70% gearing on €25m project |
@@ -118,8 +120,9 @@ Reports accumulate in the `reports/` folder — one per day, automatically.
 
 - **Power prices**: ENTSO-E Transparency Platform — IT-NORTH bidding zone, rolling 30-day window
 - **Gas prices**: TTF futures via Yahoo Finance
+- **Policy news**: Claude web search — real-time monitoring of Italian and EU energy policy
 - **Ancillary service rates**: Validated against 2024-2025 Italian capacity market auction results
-- **Capital costs**: Current 2026 BESS installed cost benchmarks (€250-320/kWh equipment, ~€500/MWh fully installed)
+- **Capital costs**: Current 2026 BESS installed cost benchmarks
 - **EURIBOR**: Live 12-month rate (~2.88% as of May 2026)
 
 ---
@@ -147,7 +150,6 @@ pip install -r requirements.txt
 
 Create a `.env` file in the root folder:
 
-
 ENTSO_E_API_KEY=your_entsoe_token
 ANTHROPIC_API_KEY=your_anthropic_key
 
@@ -165,18 +167,30 @@ python daily_report.py
 
 ---
 
+## Sample output
+
+Ask the agent *"Analyse the project including the degradation curve and tell me what a bank would say about the debt sizing"* and it will:
+
+1. Fetch live Italian power prices and calculate 30-day spread statistics
+2. Pull TTF gas futures and assess compression risk
+3. Model revenue with a full 15-year degradation schedule
+4. Calculate DSCR for every year and identify the minimum DSCR year
+5. Search for recent policy news and assess its impact
+6. Produce a structured analysis recommending debt sizing, covenant terms, and conditions precedent — in the style of a project finance term sheet
+
+---
+
 ## Honest limitations
 
-This is a learning project and proof of concept. A production-grade model would use 2-3 years of historical data, incorporate battery degradation curves, model seasonal variation properly, account for transaction costs, and integrate professional price forecasts from providers like Aurora Energy Research or Wood Mackenzie. The architecture is designed to scale — the tool structure means adding new data sources or refining assumptions requires minimal changes.
+This is a learning project and proof of concept. A production-grade model would use 2-3 years of historical data, model seasonal variation, incorporate transaction costs, and integrate professional price forecasts. The architecture is designed to scale — the tool structure means adding new data sources requires minimal changes.
 
 ---
 
 ## What's next
 
-- Policy and news monitoring — scraping EU energy policy updates and Italian market announcements, with Claude assessing whether they affect project assumptions
 - Seasonality analysis — comparing current spreads to the same period in prior years
-- Battery degradation curve — declining capacity over the project life affecting year 5-15 revenue
-- Multi-scenario comparison — saving and comparing named scenarios side by side
+- Multi-year scenario comparison — modelling spread compression over the project life
+- Web dashboard — a visual interface showing live DSCR, spread charts, and daily reports
 
 ---
 
