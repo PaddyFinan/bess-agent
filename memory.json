@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-05-12T13:59:10.224042",
+  "timestamp": "2026-05-12T14:39:03.239817",
   "date": "2026-05-12",
-  "time": "13:59",
+  "time": "14:39",
   "spread": {
     "avg_spread": 122.43,
     "min_spread": 48.85,
@@ -27,7 +27,7 @@
     "base_flag": "GREEN",
     "downside_flag": "GREEN",
     "severe_flag": "RED",
-    "deal_assessment": "BANKABLE \u2014 project supports debt financing under base and downside scenarios",
+    "deal_assessment": "BANKABLE \u2014 project supports debt financing across full project life",
     "annual_debt_service": 1801848.0
   }
 }
