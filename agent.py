@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from tools.price_data import get_spread_analysis
 from tools.revenue_model import calculate_revenue
 from tools.dscr import calculate_dscr
+from tools.gas_prices import get_gas_prices
 
 load_dotenv()
 
@@ -13,14 +14,13 @@ load_dotenv()
 client = Anthropic()
 
 # ── SYSTEM PROMPT ───────────────────────────────────────────────────
-# This tells Claude who it is and how to behave
 
 SYSTEM_PROMPT = """You are a project finance analyst specialising in battery energy 
 storage systems (BESS) in the Italian electricity market. You work for an 
 infrastructure advisory team — similar to a Big 4 TAS practice or a project 
 finance desk at a bank like BNP Paribas or Natixis.
 
-You have access to three tools:
+You have access to four tools:
 
 1. get_spread_analysis — fetches live Italian day-ahead power prices from ENTSO-E 
    and calculates daily arbitrage spread statistics over a rolling window
@@ -33,9 +33,14 @@ You have access to three tools:
    scenarios, flags bankability, and sizes the maximum supportable debt at a 
    1.30x DSCR threshold
 
-When asked about a project, always run the full analysis chain: spreads → revenue 
-→ DSCR. Interpret the results like a professional analyst — don't just recite 
-numbers, explain what they mean for the project's bankability and risk profile.
+4. get_gas_prices — fetches TTF natural gas futures prices and calculates trend 
+   analysis. TTF is the primary driver of Italian evening peak power prices and 
+   a leading indicator of spread compression risk
+
+When asked for a full analysis, always run all four tools. When asked about market 
+conditions specifically, run get_spread_analysis and get_gas_prices together.
+Interpret the results like a professional analyst — don't just recite numbers, 
+explain what they mean for the project's bankability and risk profile.
 
 When flagging risks, be specific: reference the actual numbers, explain why they 
 matter, and suggest what a lender or developer would do in response.
@@ -49,7 +54,6 @@ Current market context you should weave into your analysis:
 - Standard project finance DSCR thresholds: 1.30x minimum, 1.20x absolute floor"""
 
 # ── TOOL DEFINITIONS ────────────────────────────────────────────────
-# These tell Claude what tools exist and when to use them
 
 TOOLS = [
     {
@@ -133,17 +137,31 @@ TOOLS = [
             },
             "required": []
         }
+    },
+    {
+        "name": "get_gas_prices",
+        "description": """Fetches TTF natural gas futures prices and calculates 
+        trend analysis over a rolling window. TTF is the European gas benchmark 
+        and the primary driver of Italian evening peak power prices. Use this 
+        to provide forward-looking context on spread compression risk — a falling 
+        TTF is a bearish leading indicator for BESS arbitrage revenue. Always 
+        call this alongside the spread analysis to give a complete market picture.""",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "days": {
+                    "type": "integer",
+                    "description": "Number of historical days to analyse (default 30)"
+                }
+            },
+            "required": []
+        }
     }
 ]
 
 # ── TOOL EXECUTION ──────────────────────────────────────────────────
-# This function runs whichever tool Claude decides to call
 
 def execute_tool(tool_name: str, tool_input: dict, spread_data=None, revenue_data=None):
-    """
-    Executes the named tool with the given inputs.
-    Passes previously computed data between tools so they chain correctly.
-    """
     if tool_name == "get_spread_analysis":
         days = tool_input.get("days", 30)
         result = get_spread_analysis(days=days)
@@ -174,6 +192,11 @@ def execute_tool(tool_name: str, tool_input: dict, spread_data=None, revenue_dat
         )
         return result
 
+    elif tool_name == "get_gas_prices":
+        days = tool_input.get("days", 30)
+        result = get_gas_prices(days=days)
+        return result
+
     else:
         return {"error": f"Unknown tool: {tool_name}"}
 
@@ -181,10 +204,6 @@ def execute_tool(tool_name: str, tool_input: dict, spread_data=None, revenue_dat
 # ── CONVERSATION LOOP ───────────────────────────────────────────────
 
 def run_agent():
-    """
-    Runs the BESS project finance agent as a conversation.
-    Claude can call tools multiple times and chain them together.
-    """
     print("\n" + "=" * 60)
     print("BESS Project Finance Agent — IT-NORTH")
     print("=" * 60)
@@ -192,13 +211,10 @@ def run_agent():
     print("Type 'exit' to quit.\n")
 
     conversation_history = []
-
-    # Store tool results so they can be passed between tools
     spread_data = None
     revenue_data = None
 
     while True:
-        # Get user input
         user_input = input("You: ").strip()
 
         if user_input.lower() in ["exit", "quit", "q"]:
@@ -208,14 +224,10 @@ def run_agent():
         if not user_input:
             continue
 
-        # Add user message to history
         conversation_history.append({
             "role": "user",
             "content": user_input
         })
-
-        # ── AGENTIC LOOP ────────────────────────────────────────────
-        # Keep going until Claude stops calling tools
 
         while True:
             response = client.messages.create(
@@ -226,16 +238,12 @@ def run_agent():
                 messages=conversation_history
             )
 
-            # Check if Claude wants to call a tool
             if response.stop_reason == "tool_use":
-
-                # Add Claude's response to history
                 conversation_history.append({
                     "role": "assistant",
                     "content": response.content
                 })
 
-                # Process each tool call
                 tool_results = []
 
                 for block in response.content:
@@ -245,7 +253,6 @@ def run_agent():
 
                         print(f"\n[Agent calling: {tool_name}...]")
 
-                        # Execute the tool
                         result = execute_tool(
                             tool_name,
                             tool_input,
@@ -253,26 +260,22 @@ def run_agent():
                             revenue_data=revenue_data
                         )
 
-                        # Store results for chaining
                         if tool_name == "get_spread_analysis":
                             spread_data = result
                         elif tool_name == "calculate_revenue":
                             revenue_data = result
 
-                        # Add result to tool results list
                         tool_results.append({
                             "type": "tool_result",
                             "tool_use_id": block.id,
                             "content": json.dumps(result)
                         })
 
-                # Add tool results to history
                 conversation_history.append({
                     "role": "user",
                     "content": tool_results
                 })
 
-            # Claude has finished — print the response
             else:
                 assistant_message = ""
                 for block in response.content:
@@ -281,7 +284,6 @@ def run_agent():
 
                 print(f"\nAgent: {assistant_message}\n")
 
-                # Add to history for next turn
                 conversation_history.append({
                     "role": "assistant",
                     "content": assistant_message
