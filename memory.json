@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-05-12T16:08:37.750610",
-  "date": "2026-05-12",
-  "time": "16:08",
+  "timestamp": "2026-05-13T07:45:12.026059",
+  "date": "2026-05-13",
+  "time": "07:45",
   "spread": {
     "avg_spread": 122.68,
     "min_spread": 48.85,
@@ -11,9 +11,9 @@
     "days_analysed": 30
   },
   "gas": {
-    "current_price": 46.33,
-    "change_pct": -2.5,
-    "trend": "stable"
+    "current_price": 46.2,
+    "change_pct": -7.7,
+    "trend": "falling"
   },
   "revenue": {
     "base_case": 2927305.0,
