@@ -1,29 +1,29 @@
 {
-  "timestamp": "2026-05-22T08:18:09.658763",
-  "date": "2026-05-22",
-  "time": "08:18",
+  "timestamp": "2026-05-23T07:26:08.256994",
+  "date": "2026-05-23",
+  "time": "07:26",
   "spread": {
-    "avg_spread": 129.37,
+    "avg_spread": 132.39,
     "min_spread": 48.85,
     "max_spread": 190.25,
-    "std_spread": 38.91,
-    "cv_spread": 30.1,
+    "std_spread": 39.45,
+    "cv_spread": 29.8,
     "days_analysed": 30
   },
   "gas": {
-    "current_price": 49.41,
-    "change_pct": 6.5,
-    "trend": "rising"
+    "current_price": 48.68,
+    "change_pct": 4.9,
+    "trend": "stable"
   },
   "revenue": {
-    "base_case": 3005139.0,
-    "downside": 2552446.0,
-    "severe_downside": 2099752.0
+    "base_case": 3040275.0,
+    "downside": 2581299.0,
+    "severe_downside": 2122323.0
   },
   "dscr": {
-    "base_case": 2.08,
-    "downside": 1.77,
-    "severe_downside": 1.46,
+    "base_case": 2.11,
+    "downside": 1.79,
+    "severe_downside": 1.47,
     "base_flag": "GREEN",
     "downside_flag": "GREEN",
     "severe_flag": "GREEN",
