@@ -1,13 +1,13 @@
 {
-  "timestamp": "2026-05-24T07:46:45.125665",
-  "date": "2026-05-24",
-  "time": "07:46",
+  "timestamp": "2026-05-25T08:51:28.776622",
+  "date": "2026-05-25",
+  "time": "08:51",
   "spread": {
-    "avg_spread": 133.29,
+    "avg_spread": 135.1,
     "min_spread": 48.85,
     "max_spread": 190.25,
-    "std_spread": 40.27,
-    "cv_spread": 30.2,
+    "std_spread": 41.39,
+    "cv_spread": 30.6,
     "days_analysed": 30
   },
   "gas": {
@@ -16,14 +16,14 @@
     "trend": "rising"
   },
   "revenue": {
-    "base_case": 3050746.0,
-    "downside": 2582230.0,
-    "severe_downside": 2113713.0
+    "base_case": 3071804.0,
+    "downside": 2590257.0,
+    "severe_downside": 2108710.0
   },
   "dscr": {
-    "base_case": 2.12,
-    "downside": 1.79,
-    "severe_downside": 1.47,
+    "base_case": 2.13,
+    "downside": 1.8,
+    "severe_downside": 1.46,
     "base_flag": "GREEN",
     "downside_flag": "GREEN",
     "severe_flag": "GREEN",
